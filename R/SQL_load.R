@@ -9,6 +9,7 @@
 #'                 See SQL_table function for list of tables.
 #' @param database Name of database to connect to. Default is 'coi'.
 #' @param columns  Columns to load from table. Default is all columns.
+#'                 Syntax is 'column1, column2, column3'
 #' @param dictionary Load dictionary table. Default is FALSE.
 #' @param metadata   Load metadata table. Default is FALSE.
 

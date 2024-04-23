@@ -18,7 +18,8 @@ See SQL_table function for list of tables.}
 
 \item{database}{Name of database to connect to. Default is 'coi'.}
 
-\item{columns}{Columns to load from table. Default is all columns.}
+\item{columns}{Columns to load from table. Default is all columns.
+Syntax is 'column1, column2, column3'}
 
 \item{dictionary}{Load dictionary table. Default is FALSE.}
 
