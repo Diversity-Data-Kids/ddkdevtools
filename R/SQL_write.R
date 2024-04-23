@@ -14,7 +14,10 @@
 
 SQL_write <- function(infile = NULL, table_name = NULL, database = NULL){
 
-  table <- read.csv(infile, colClasses="character")
+  # table <- read.csv(infile, colClasses="character")
+  table <- read.csv(infile)
+
+  table[,1] <- as.character(table[,1])
 
   # column names
   names <- colnames(table)
@@ -72,6 +75,8 @@ SQL_write <- function(infile = NULL, table_name = NULL, database = NULL){
   query <- paste0("LOAD DATA LOCAL INFILE '", infile, "' INTO TABLE ", table_name," FIELDS TERMINATED BY ',' ENCLOSED BY '\"' LINES TERMINATED BY '\n';")
   RMariaDB::dbGetQuery(con, query)
   end <- Sys.time()
+
+  RMariaDB::dbGetQuery(con, paste0("DELETE FROM ", table_name, " LIMIT 1;"))
 
   # disconnect from server
   RMariaDB::dbDisconnect(con);rm(con)
