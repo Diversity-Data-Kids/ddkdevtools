@@ -9,15 +9,11 @@
 #' @param table_name name of table to write to in SQL database
 #' @param database name of database to write to in SQL database
 
-#FIXME: Need to work on this function some more. It is not working as intended.
+#FIXME: Writing column names into first row of table. Need to fix this. When loading data from
+#       SQL we are being forced to load all columns as character. This is slow.
 
 SQL_write <- function(infile = NULL, table_name = NULL, database = NULL){
 
-
-  # need to get table names from infile
-  # TODO: make this part of the script more efficient
-  #-----------------------------------------
-  # read table
   table <- read.csv(infile, colClasses="character")
 
   # column names
@@ -41,21 +37,11 @@ SQL_write <- function(infile = NULL, table_name = NULL, database = NULL){
   }; rm(i,names,class)
 
   rm(table)
-  #-----------------------------------------
 
 
 
 
 
-  # SQL portion of function
-  #-----------------------------------------
-  # TODO: warning message if writing to a table that already exists
-  # TODO: error stop message if can't write table for other reasons
-  # set to write big data to server
-  # dbGetQuery(con, "SET GLOBAL innodb_strict_mode = 0;")
-
-  # Connect to Brandeis office SQL database
-  # TODO: throw error if not connected to pulse
   con <- RMariaDB::dbConnect(RMariaDB::MariaDB(),
                    host='129.64.58.140', port=3306,
                    user='dba1', password='Password123$')
