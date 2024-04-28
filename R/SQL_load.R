@@ -8,8 +8,8 @@
 #' @param table    Name of table from SQL database to load into R environment.
 #'                 See SQL_table function for list of tables.
 #' @param database Name of database to connect to. Default is 'coi'.
-#' @param columns  Columns to load from table. Default is all columns.
-#'                 Syntax is 'column1, column2, column3'
+#' @param columns  Columns to load from table. Default is all columns. Input format is a vector, i.e.
+#'                 columns = c("col1", "col2", "col3", ...)
 #' @param dictionary Load dictionary table. Default is FALSE.
 #' @param metadata   Load metadata table. Default is FALSE.
 
@@ -20,6 +20,9 @@
 
 # function: load_db
 SQL_load <- function(table = NULL, database = NULL, columns = NULL, dictionary = FALSE, metadata = FALSE){
+
+  # recode the columns parameter to a string for SQL query
+  columns <- paste(columns, collapse=", ")
 
   # Connect to Brandeis office SQL database
   # TODO: throw error if not connected to pulse
