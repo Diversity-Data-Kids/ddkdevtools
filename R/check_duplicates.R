@@ -7,6 +7,8 @@
 
 check_duplicates <- function(dt=NULL, by_cols=NULL, noisily=T) {
 
+  library(data.table)
+
   if (noisily==T) cat(" ", sepby="\n")
 
   ### Checks

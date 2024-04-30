@@ -8,6 +8,8 @@
 
 check_miss <- function(dt=NULL, exempt=NULL, noisily=T, abort=T) {
 
+  library(data.table)
+
   if ( is.data.frame(dt)==F & is.data.table(dt)==F ) stop("dt needs to be a data.table or data.frame")
   if ( is.data.frame(dt)==T) dt <- as.data.table(dt)
 
