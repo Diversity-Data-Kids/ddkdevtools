@@ -17,7 +17,7 @@ check_miss <- function(dt=NULL, exempt=NULL, noisily=T, abort=T) {
   if (!is.null(exempt)) {
     if (!all(exempt %in% names(dt))) stop("One or more elements of exempt does not exist in data.table")
     for (itm in exempt) {
-      vars <- vars[!str_detect(vars, itm)]
+      vars <- vars[!stringr::str_detect(vars, itm)]
     }
   }
 

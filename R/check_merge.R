@@ -54,8 +54,8 @@ check_merge <- function(data1, data2, keys, join_type="outer", abort=T, return_c
   ### Checks
 
   # Check options
-  if (any( str_detect(c("inner","outer","left","right"), join_type) )==F)        stop("join_type can only be outer (default), inner, left, or right")
-  if (any( str_detect(c("data.table","tibble","data.frame"), return_class) )==F) stop("return_class can only be data.table (default), tibble or data.frame")
+  if (any( stringr::str_detect(c("inner","outer","left","right"), join_type) )==F)        stop("join_type can only be outer (default), inner, left, or right")
+  if (any( stringr::str_detect(c("data.table","tibble","data.frame"), return_class) )==F) stop("return_class can only be data.table (default), tibble or data.frame")
   if ((noisily==T | noisily==F)==F)                       stop("noisily can only be TRUE (default) or FALSE")
   if ((keep_merge_vars==T | keep_merge_vars==F)==F)       stop("keep_merge_vars can only be FALSE (default) or TRUE")
   if ((abort==T | abort==F)==F)                           stop("abort can only be FALSE (default) or TRUE")
@@ -82,8 +82,8 @@ check_merge <- function(data1, data2, keys, join_type="outer", abort=T, return_c
 
   # Check that keys exist in both datasets
   for(k in 1:length(keys)) {
-    if ( any( str_detect(names1, keys[k]) )==F ) stop(paste0(keys[k], " missing from data1"))
-    if ( any( str_detect(names2, keys[k]) )==F ) stop(paste0(keys[k], " missing from data2"))
+    if ( any( stringr::str_detect(names1, keys[k]) )==F ) stop(paste0(keys[k], " missing from data1"))
+    if ( any( stringr::str_detect(names2, keys[k]) )==F ) stop(paste0(keys[k], " missing from data2"))
   }
   rm(k)
 
@@ -137,7 +137,7 @@ check_merge <- function(data1, data2, keys, join_type="outer", abort=T, return_c
   merge_result <- print_merge_results(dt=merged, disp_vars=disp_vars)
 
   if (noisily==T) {
-    cat(format(as_tibble(merge_result[,..disp_vars]))[-c(1,3)], sep = "\n")
+    cat(format(tibble::as_tibble(merge_result[,..disp_vars]))[-c(1,3)], sep = "\n")
     cat("",sep="\n")
   }
 
@@ -153,7 +153,7 @@ check_merge <- function(data1, data2, keys, join_type="outer", abort=T, return_c
       cat("", sep="\n")
 
       if (noisily==F) {
-        cat(format(as_tibble(merge_result[,..disp_vars]))[-c(1,3)], sep = "\n")
+        cat(format(tibble::as_tibble(merge_result[,..disp_vars]))[-c(1,3)], sep = "\n")
         cat("",sep="\n")
       }
 
@@ -206,7 +206,7 @@ check_merge <- function(data1, data2, keys, join_type="outer", abort=T, return_c
   if (keep_merge_vars==F) merged$data1 <- merged$data2 <- NULL
 
   # Convert to class
-  if (return_class=="tibble")     merged <- as_tibble(merged)
+  if (return_class=="tibble")     merged <- tibble::as_tibble(merged)
   if (return_class=="data.frame") merged <- as.data.frame(merged)
 
   if (noisily==T) cat(" ", sepby="\n")

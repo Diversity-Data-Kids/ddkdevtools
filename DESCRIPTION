@@ -10,6 +10,6 @@ Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.3.1
 Imports:
-  RMariaDB,
+  RMariaDB, data.table, tibble, stringr
 Depends:
-  data.table
+  RMariaDB, dtadata.table, tibble, stringr

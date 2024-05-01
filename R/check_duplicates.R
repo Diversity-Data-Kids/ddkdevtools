@@ -13,8 +13,8 @@ check_duplicates <- function(dt=NULL, by_cols=NULL, noisily=T) {
   if (!all(by_cols %in% colnames(dt))) stop("Not all elements of by_cols are in dt")
 
   rows_dt     <- nrow(dt)
-  # unique_rows <- nrow(unique(dt[,..by_cols], by=by_cols) )
-  unique_rows <- nrow(unique(dt[, by_cols, with=FALSE], by=by_cols) )
+  unique_rows <- nrow(unique(dt[ , ..by_cols], by=by_cols) )
+  # unique_rows <- nrow(unique(dt[, by_cols, with=FALSE], by=by_cols) ) # tried this and it worked, too.
 
   if (rows_dt!=unique_rows) {
 
