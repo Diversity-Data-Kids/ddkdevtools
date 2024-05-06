@@ -18,8 +18,8 @@ See SQL_table function for list of tables.}
 
 \item{database}{Name of database to connect to. Default is 'coi'.}
 
-\item{columns}{Columns to load from table. Default is all columns.
-Syntax is 'column1, column2, column3'}
+\item{columns}{Columns to load from table. Default is all columns. Input format is a vector, i.e.
+columns = c("col1", "col2", "col3", ...)}
 
 \item{dictionary}{Load dictionary table. Default is FALSE.}
 
