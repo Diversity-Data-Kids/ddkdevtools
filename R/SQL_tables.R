@@ -49,7 +49,7 @@ SQL_tables <- function(database = NULL){
     row_count <- RMariaDB::dbGetQuery(con, paste0("SELECT COUNT(*) FROM ", table2, ";"))
 
     # row and column bind data
-    dt <- cbind(table_name = table, dict_exists = dict_exists, dt, row_count = row_count$`COUNT(*)`, col_count = col_count$`COUNT(*)`)
+    dt <- cbind(table_name = table2, dict_exists = dict_exists, dt, row_count = row_count$`COUNT(*)`, col_count = col_count$`COUNT(*)`)
     list_tables <- rbind(list_tables, dt)
   }
 
