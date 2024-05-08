@@ -10,7 +10,8 @@ SQL_tables(database = NULL)
 \item{database}{Name of database to connect to. Default is 'coi'.}
 }
 \description{
-list available tables and metadata in SQL database
+Returns a table that lists all the given tables in a database. Each row contains the table name
+and metadata for that table.
 }
 \author{
 brian devoe
