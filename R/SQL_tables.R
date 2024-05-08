@@ -56,6 +56,9 @@ SQL_tables <- function(database = NULL){
   # disconnect from server
   RMariaDB::dbDisconnect(con);rm(con)
 
+  # save table
+  # save(list_tables, file = paste0("data/", database, ".rda"))
+
   # return
   return(list_tables)
 }
