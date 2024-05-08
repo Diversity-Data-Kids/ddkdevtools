@@ -10,7 +10,7 @@ SQL_tables(database = NULL)
 \item{database}{Name of database to connect to. Default is 'coi'.}
 }
 \description{
-Call function to list available tables in COI SQL database
+list available tables and metadata in SQL database
 }
 \author{
 brian devoe

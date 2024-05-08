@@ -1,15 +1,18 @@
-#' @name SQL_tables
-#' @title SQL_tables
+#' @name SQL_table_names
+#' @title SQL_table_names
 #' @author brian devoe
 #'
 #' @description
-#' list available tables and metadata in SQL database
+#' Call function to list available tables in COI SQL database
 #'
 #' @param database Name of database to connect to. Default is 'coi'.
 
-SQL_tables <- function(database = NULL){
+
+# function list tables
+SQL_table_names <- function(database = NULL){
 
   # Connect to Brandeis office SQL database
+  # TODO: throw error if not connected to pulse
   con <- RMariaDB::dbConnect(RMariaDB::MariaDB(),
                    host='129.64.58.140', port=3306,
                    user='dba1', password='Password123$')
@@ -23,22 +26,9 @@ SQL_tables <- function(database = NULL){
   # load tables list
   tables <- RMariaDB::dbGetQuery(con, "SHOW TABLES;")
 
-  # filter to only metadata
-  tables <- tables[grepl("_metadata", tables$Tables_in_coi),]
-
-  # for loop to get all tables metadata
-  list_tables <- data.table()
-  for(table in tables){
-    dt <- RMariaDB::dbGetQuery(con, paste0("SELECT * FROM ", table, ";"))
-    dt$type <- NULL
-    dt <- tidyr::pivot_wider(dt, names_from = name, values_from = value)
-    dt <- cbind(table_name = table, dt)
-    list_tables <- rbind(list_tables, dt)
-  }
-
   # disconnect from server
   RMariaDB::dbDisconnect(con);rm(con)
 
   # return
-  return(list_tables)
+  return(tables)
 }
