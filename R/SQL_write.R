@@ -9,9 +9,6 @@
 #' @param table_name name of table to write to in SQL database
 #' @param database name of database to write to in SQL database
 
-#FIXME: Writing column names into first row of table. Need to fix this. When loading data from
-#       SQL we are being forced to load all columns as character. This is slow.
-
 SQL_write <- function(infile = NULL, table_name = NULL, database = NULL){
 
   # table <- read.csv(infile, colClasses="character")
