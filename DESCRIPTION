@@ -1,6 +1,6 @@
 Package: ddkdevtools
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Development library for DDK team
 Version: 0.1.0
 Author: Brian DeVoe, Clemens Noelke 
 Maintainer: The package maintainer <yourself@somewhere.net>
