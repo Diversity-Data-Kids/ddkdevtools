@@ -1,30 +1,26 @@
-#' @name SQL_write
-#' @title SQL_write
+#' @name SQL_write_old
+#' @title SQL_write_old
 #' @author brian devoe
 #'
 #' @description
 #' write table from given directory to COI SQL database
 #'
-#' @param table path to file to write to SQL database
+#' @param infile path to file to write to SQL database
 #' @param table_name name of table to write to in SQL database
 #' @param database name of database to write to in SQL database
 
-# SQL_write <- function(infile = NULL, table_name = NULL, database = NULL){
-SQL_write <- function(table = NULL, table_name = NULL, database = NULL){
+SQL_write <- function(infile = NULL, table_name = NULL, database = NULL){
 
-  # table <- data.table::as.data.frame(table)
   # table <- read.csv(infile, colClasses="character")
-  # table <- read.csv(infile)
-  #
-  # table[,1] <- as.character(table[,1])
+  table <- read.csv(infile)
 
+  table[,1] <- as.character(table[,1])
 
-  # TODO: need to fix, can we simply load with dictionary?
   # column names
   names <- colnames(table)
   for(i in 1:length(names)){
     if(names[i] == "group"){names[i] <- "`group`"}
-    class <- class(table[i])
+     class <- class(table[,i])
     if(class == "character"){
       names[i] <- paste0(names[i], " text(30)")
     } else if(class == "integer"){
@@ -47,8 +43,8 @@ SQL_write <- function(table = NULL, table_name = NULL, database = NULL){
 
 
   con <- RMariaDB::dbConnect(RMariaDB::MariaDB(),
-                             host='129.64.58.140', port=3306,
-                             user='dba1', password='Password123$')
+                   host='129.64.58.140', port=3306,
+                   user='dba1', password='Password123$')
 
   # select coi db
   # dbGetQuery(con, "USE coi;")
