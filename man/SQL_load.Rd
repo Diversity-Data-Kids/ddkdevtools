@@ -4,13 +4,7 @@
 \alias{SQL_load}
 \title{SQL_load}
 \usage{
-SQL_load(
-  table = NULL,
-  database = NULL,
-  columns = NULL,
-  dictionary = FALSE,
-  metadata = FALSE
-)
+SQL_load(table = NULL, database = NULL, columns = NULL)
 }
 \arguments{
 \item{table}{Name of table from SQL database to load into R environment.
@@ -20,10 +14,6 @@ See SQL_table function for list of tables.}
 
 \item{columns}{Columns to load from table. Default is all columns. Input format is a vector, i.e.
 columns = c("col1", "col2", "col3", ...)}
-
-\item{dictionary}{Load dictionary table. Default is FALSE.}
-
-\item{metadata}{Load metadata table. Default is FALSE.}
 }
 \description{
 load table from SQL database

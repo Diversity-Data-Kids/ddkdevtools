@@ -10,40 +10,36 @@
 #' @param database Name of database to connect to. Default is 'coi'.
 #' @param columns  Columns to load from table. Default is all columns. Input format is a vector, i.e.
 #'                 columns = c("col1", "col2", "col3", ...)
-#' @param dictionary Load dictionary table. Default is FALSE.
-#' @param metadata   Load metadata table. Default is FALSE.
-
-
-# FIXME: Can we return multiple objects? i.e. a seperate table, dictionary, and metadata object?
-#        Would saving them to a list be ok? Maybe seperate functions?
-
 
 # function: load_db
-SQL_load <- function(table = NULL, database = NULL, columns = NULL, dictionary = FALSE, metadata = FALSE){
+SQL_load <- function(table = NULL, database = NULL, columns = NULL){
+
+  # start timer
+  start <- Sys.time()
+
+  # check if table and database is provided
+  if(is.null(table)){   stop("table parameter is required")}
+  if(is.null(database)){stop("database parameter is required")}
 
   # recode the columns parameter to a string for SQL query
-  columns <- paste(columns, collapse=", ")
+  if(!is.null(columns)){columns <- paste(columns, collapse=", ")}
 
   # Connect to Brandeis office SQL database
-  # TODO: throw error if not connected to pulse
-  con <- RMariaDB::dbConnect(RMariaDB::MariaDB(),
-                   host='129.64.58.140', port=3306,
-                   user='dba1', password='Password123$')
+  con <- RMariaDB::dbConnect(RMariaDB::MariaDB(),host='129.64.58.140', port=3306,user='dba1',password='Password123$')
 
-  # connect to coi database
-  if(is.null(database)){
-    RMariaDB::dbGetQuery(con, "USE coi;")}
-  if(!is.null(database)){
-    RMariaDB::dbGetQuery(con, paste0("USE ", database, ";"))}
+  # select database
+  RMariaDB::dbGetQuery(con, paste0("USE ", database, ";"))
 
   # load table
-  if(is.null(columns)){
-    dt <- RMariaDB::dbGetQuery(con, paste0("SELECT * FROM ", table, ";"))}
-  if(!is.null(columns)){
-    dt <- RMariaDB::dbGetQuery(con, paste0("SELECT ", columns, " FROM ", table, ";"))}
+  if( is.null(columns)){dt <- RMariaDB::dbGetQuery(con, paste0("SELECT * FROM ", table, ";"))}
+  if(!is.null(columns)){dt <- RMariaDB::dbGetQuery(con, paste0("SELECT ", columns, " FROM ", table, ";"))}
 
   # disconnect from server
   RMariaDB::dbDisconnect(con);rm(con)
+
+  # end timer
+  end <- Sys.time()
+  print(paste("Time to load table:", end-start))
 
   # return
   return(dt)
