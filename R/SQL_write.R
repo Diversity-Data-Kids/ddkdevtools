@@ -7,10 +7,10 @@
 #' WARNING: This function will not work unless you have database administrator credentials
 #'
 #' @param table data table in R environment to write to SQL database
-#' @param table_name name the table that will appear in SQL database
+#' @param table_id name the table that will appear in SQL database
 #' @param database name of database to write to in SQL database
 
-SQL_write <- function(table = NULL, table_name = NULL, database = NULL){
+SQL_write <- function(table = NULL, table_id = NULL, database = NULL){
 
   # start time
   start <- Sys.time()
@@ -28,7 +28,7 @@ SQL_write <- function(table = NULL, table_name = NULL, database = NULL){
   RMariaDB::dbGetQuery(con, paste0("USE ", database, ";"))
 
   # write table
-  dbWriteTable(con, table_name, table)
+  dbWriteTable(con, table_id, table)
 
   # disconnect from server
   RMariaDB::dbDisconnect(con);rm(con)
