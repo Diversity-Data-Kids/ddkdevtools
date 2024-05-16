@@ -14,6 +14,7 @@
 #'
 #' @param noisily  Print out dictionary and metadata of table. Default is FALSE.
 
+# TODO: add example function call to documentation
 # TODO: add noisily option to print out dictionary and metadata of table
 
 # function: load_db
