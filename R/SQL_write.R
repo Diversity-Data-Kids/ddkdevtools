@@ -15,14 +15,8 @@ SQL_write <- function(table = NULL, table_id = NULL, database = NULL, user = NUL
   # start time
   start <- Sys.time()
 
-  # load database administrator credentials
-  source(paste0(dirname(getwd()), "/Credentials/SQL_dba_creds.R"))
-
   # connect to SQL server
   con <- RMariaDB::dbConnect(RMariaDB::MariaDB(),host='129.64.58.140',port=3306,user=user,password=password)
-
-  # remove credentials
-  rm(host, port, user, password, dir)
 
   # select database to write to
   RMariaDB::dbGetQuery(con, paste0("USE ", database, ";"))
