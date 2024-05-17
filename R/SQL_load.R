@@ -17,16 +17,13 @@
 #'                 filter = c("col1 = 'value1', col2 = 'value2', col3 >= 'value3', ...)
 #'
 #' @param noisily  Print out dictionary and metadata of table. Default is FALSE.
-#'
 #' @examples
 #' # load full ADI_HIED table from ACS database
 #' ADI_HIED <- SQL_load(table = "ADI_HIED", database = "ACS")
-#'
 #' # load selected columns from METRICS_10 table from DDK database
 #' METRICS_10 <- SQL_load(table    = "METRICS_10",
 #'                        database = "DDK",
 #'                        columns  = c("geoid10", "year", "coi30_met"))
-#'
 #' # load selected columns and filtered rows from METRICS_10 table from DDK database
 #' METRICS_10 <- SQL_load(table    = "METRICS_10",
 #'                        database = "DDK",
