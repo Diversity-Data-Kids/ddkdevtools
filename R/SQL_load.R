@@ -47,7 +47,7 @@ SQL_load <- function(table_id = NULL, database = NULL, columns = NULL, filter = 
   }
 
   # after checking if database exists, select it for use
-  RMariaDB::dbGetQuery(con, paste0("USE ", database, ";"))
+  RMariaDB::dbExecute(con, paste0("USE ", database, ";"))
 
   # check if table exists and remove connection and throw error if it does not
   table_id_list <- RMariaDB::dbGetQuery(con, "SHOW TABLES;")
@@ -58,7 +58,7 @@ SQL_load <- function(table_id = NULL, database = NULL, columns = NULL, filter = 
 
   # after checking if database exists, print out dictionary and metadata of table if noisily is TRUE
   if(noisily){
-    # TODO: add check if dictionary and metadata exists
+    # TODO: add check if condition that checks if dictionary and metadata tables exist
     print("Dictionary ")
     print(RMariaDB::dbGetQuery(con, paste0("SELECT * FROM ", table_id, "_dict;")))
     print("metadata ")
