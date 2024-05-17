@@ -9,6 +9,9 @@
 #' @param table data table in R environment to write to SQL database
 #' @param table_id name the table that will appear in SQL database
 #' @param database name of database to write to in SQL database
+#'
+#' @param user username for SQL database, this function will only work with administrator credintials
+#' @param password password for SQL database administrator
 
 SQL_write <- function(table = NULL, table_id = NULL, database = NULL, user = NULL, password = NULL){
 
