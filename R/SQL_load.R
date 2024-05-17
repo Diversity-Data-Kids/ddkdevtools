@@ -3,32 +3,38 @@
 #' @author brian devoe
 #'
 #' @description
-#' load table from SQL database
+#' Wrapper function that helps execute SQL SELECT queries for clients and DDK data team.
 #'
 #' @param table_id Name of table from SQL database to load into R environment.
 #'                 See SQL_table function for list of tables.
+#'
 #' @param database Name of database to connect to. Default is 'coi'.
+#'
 #' @param columns  Columns to load from table. Default is all columns. Input format is a vector, i.e.
 #'                 columns = c("col1", "col2", "col3", ...)
+#'
 #' @param filter   Filter to apply to table. Default is no filter. Input format is a string (DO NOT USE)
+#'                 filter = c("col1 = 'value1', col2 = 'value2', col3 >= 'value3', ...)
 #'
 #' @param noisily  Print out dictionary and metadata of table. Default is FALSE.
 
 # TODO: add example function call to documentation
-# TODO: add noisily option to print out dictionary and metadata of table
 
 # function: load_db
-SQL_load <- function(table_id = NULL, database = NULL, columns = NULL, filter = NULL, noisily = FALSE){
+SQL_load <- function(table_id = NULL, database = NULL, columns = NULL, filter = NULL, noisily = TRUE){
 
   # start timer
   start <- Sys.time()
 
   # check if table and database is provided
-  if(is.null(table_id)){   stop("table_id parameter is required")}
+  if(is.null(table_id)){stop("table_id parameter is required")}
   if(is.null(database)){stop("database parameter is required")}
 
   # recode the columns parameter to a string for SQL query
   if(!is.null(columns)){columns <- paste(columns, collapse=", ")}
+
+  # recode the filter parameter to a string for SQL query
+  if(!is.null(filter)){filter <- paste(filter, collapse=" AND ")}
 
   # Connect to Brandeis office SQL database
   con <- RMariaDB::dbConnect(RMariaDB::MariaDB(),host='129.64.58.140', port=3306,user='dba1',password='Password123$')
@@ -50,10 +56,25 @@ SQL_load <- function(table_id = NULL, database = NULL, columns = NULL, filter = 
     stop(paste0("table '",  table_id,"' does not exist in database '", database, "'", " -- please use SQL_table_ids('",database,"') to list available tables"))
   }
 
-  # load table
+  # after checking if database exists, print out dictionary and metadata of table if noisily is TRUE
+  if(noisily){
+    # TODO: add check if dictionary and metadata exists
+    print("-----------------------------------------------------------------------------------------")
+    print("Dictionary ")
+    print(RMariaDB::dbGetQuery(con, paste0("SELECT * FROM ", table_id, "_dict;")))
+    print("-----------------------------------------------------------------------------------------")
+    print("metadata ")
+    print(RMariaDB::dbGetQuery(con, paste0("SELECT * FROM ", table_id, "_metadata;")))
+  }
+
+  # load full table
   if( is.null(columns)){dt <- RMariaDB::dbGetQuery(con, paste0("SELECT * FROM ", table_id, ";"))}
+
+  # load selected columns from table
   if(!is.null(columns)){dt <- RMariaDB::dbGetQuery(con, paste0("SELECT ", columns, " FROM ", table_id, ";"))}
-  # TODO: if(!is.null(columns) & !is.null(filter)){dt <- RMariaDB::dbGetQuery(con, )}
+
+  # load selected columns and filtered rows from table
+  if(!is.null(columns) & !is.null(filter)){dt <- RMariaDB::dbGetQuery(con, paste0("SELECT ", columns, " FROM ", table_id, "WHERE ", filter, ";"))}
 
   # disconnect from server
   RMariaDB::dbDisconnect(con);rm(con)

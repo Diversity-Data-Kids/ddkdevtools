@@ -14,9 +14,9 @@ More detailed documentation here. We can also link to vignettes, describe main f
 built in data, use examples, and provide references to other documentation.
 }
 \seealso{
-git repo:  \url{https://github.com/briandevoe/ddkcoidev}
+git repo:  \url{https://github.com/Diversity-Data-Kids/ddkdevtools}
 }
 \author{
-Brian DeVoe
+Brian DeVoe, Clemens Noelke, and the Data Diversity Kids Team
 }
 \keyword{internal}

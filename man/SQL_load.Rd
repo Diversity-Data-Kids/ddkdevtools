@@ -9,7 +9,7 @@ SQL_load(
   database = NULL,
   columns = NULL,
   filter = NULL,
-  noisily = FALSE
+  noisily = TRUE
 )
 }
 \arguments{
@@ -21,12 +21,13 @@ See SQL_table function for list of tables.}
 \item{columns}{Columns to load from table. Default is all columns. Input format is a vector, i.e.
 columns = c("col1", "col2", "col3", ...)}
 
-\item{filter}{Filter to apply to table. Default is no filter. Input format is a string (DO NOT USE)}
+\item{filter}{Filter to apply to table. Default is no filter. Input format is a string (DO NOT USE)
+filter = c("col1 = 'value1', col2 = 'value2', col3 >= 'value3', ...)}
 
 \item{noisily}{Print out dictionary and metadata of table. Default is FALSE.}
 }
 \description{
-load table from SQL database
+Wrapper function that helps execute SQL SELECT queries for clients and DDK data team.
 }
 \author{
 brian devoe

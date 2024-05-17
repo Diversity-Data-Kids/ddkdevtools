@@ -2,8 +2,8 @@
 
 #' @keywords internal
 #' @title   ddkdevtools - Data Diversity Kids Development Library
-#' @author  Brian DeVoe
-#' @seealso git repo:  \url{https://github.com/briandevoe/ddkcoidev}
+#' @author  Brian DeVoe, Clemens Noelke, and the Data Diversity Kids Team
+#' @seealso git repo:  \url{https://github.com/Diversity-Data-Kids/ddkdevtools}
 
 # body ---------------------------------------------------------------------------------------------
 
