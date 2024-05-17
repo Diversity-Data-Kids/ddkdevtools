@@ -59,7 +59,7 @@ SQL_load <- function(table_id = NULL, database = NULL, columns = NULL, filter = 
 
   # check if table exists and remove connection and throw error if it does not
   table_id_list <- RMariaDB::dbGetQuery(con, "SHOW TABLES;")
-  if(!table_id %in% table_id_list[1]){
+  if(!table_id %in% table_id_list[[1]]){
     RMariaDB::dbDisconnect(con);rm(con) # disconnect and remove connection
     stop(paste0("table '",  table_id,"' does not exist in database '", database, "'", " -- please use SQL_table_ids('",database,"') to list available tables"))
   }
