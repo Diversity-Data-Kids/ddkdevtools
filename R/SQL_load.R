@@ -17,6 +17,14 @@
 #'                 filter = c("col1 = 'value1', col2 = 'value2', col3 >= 'value3', ...)
 #'
 #' @param noisily  Print out dictionary and metadata of table. Default is FALSE.
+#'
+#' @examples
+#' # load full ADI_HIED table from ACS database
+#' ADI_HIED <- SQL_load(table = "ADI_HIED", database = "ACS")
+#'
+#' # load selected columns from METRICS_10 table from DDK database
+#' METRICS_10 <- SQL_load(table = "METRICS_10", database = "DDK", columns = c("geoid10", "year", "col3"))
+
 
 # TODO: add example function call to documentation
 
@@ -51,7 +59,7 @@ SQL_load <- function(table_id = NULL, database = NULL, columns = NULL, filter = 
 
   # check if table exists and remove connection and throw error if it does not
   table_id_list <- RMariaDB::dbGetQuery(con, "SHOW TABLES;")
-  if(!table_id %in% table_id_list$Tables_in_ACS){
+  if(!table_id %in% table_id_list[1]){
     RMariaDB::dbDisconnect(con);rm(con) # disconnect and remove connection
     stop(paste0("table '",  table_id,"' does not exist in database '", database, "'", " -- please use SQL_table_ids('",database,"') to list available tables"))
   }
