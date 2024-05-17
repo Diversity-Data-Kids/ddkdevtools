@@ -59,10 +59,8 @@ SQL_load <- function(table_id = NULL, database = NULL, columns = NULL, filter = 
   # after checking if database exists, print out dictionary and metadata of table if noisily is TRUE
   if(noisily){
     # TODO: add check if dictionary and metadata exists
-    print("-----------------------------------------------------------------------------------------")
     print("Dictionary ")
     print(RMariaDB::dbGetQuery(con, paste0("SELECT * FROM ", table_id, "_dict;")))
-    print("-----------------------------------------------------------------------------------------")
     print("metadata ")
     print(RMariaDB::dbGetQuery(con, paste0("SELECT * FROM ", table_id, "_metadata;")))
   }
