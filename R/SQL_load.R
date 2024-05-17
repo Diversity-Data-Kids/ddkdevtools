@@ -1,4 +1,4 @@
-#' @name SQL_load
+#' @name  SQL_load
 #' @title SQL_load
 #' @author brian devoe
 #'
