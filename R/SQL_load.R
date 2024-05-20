@@ -18,9 +18,6 @@
 #'
 #' @param noisily  Print out dictionary and metadata of table. Default is FALSE.
 
-#' @param newparam blank description
-
-
 # # load full ADI_HIED table from ACS database
 # ADI_HIED <- SQL_load(table = "ADI_HIED", database = "ACS")
 # # load selected columns from METRICS_10 table from DDK database
@@ -32,7 +29,6 @@
 #                        database = "DDK",
 #                        columns  = c("geoid10", "year", "coi30_met"),
 #                        filter   = c("year = 2010"))
-# adding testing line
 # TODO: add example function call to documentation
 
 # function: load_db

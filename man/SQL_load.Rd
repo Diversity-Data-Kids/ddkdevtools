@@ -25,8 +25,6 @@ columns = c("col1", "col2", "col3", ...)}
 filter = c("col1 = 'value1', col2 = 'value2', col3 >= 'value3', ...)}
 
 \item{noisily}{Print out dictionary and metadata of table. Default is FALSE.}
-
-\item{newparam}{blank description}
 }
 \description{
 Wrapper function that helps execute SQL SELECT queries for clients and DDK data team.
