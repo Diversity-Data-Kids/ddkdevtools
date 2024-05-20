@@ -83,8 +83,7 @@ SQL_load <- function(table_id = NULL, database = NULL, columns = NULL, filter = 
   if(!is.null(columns)){dt <- RMariaDB::dbGetQuery(con, paste0("SELECT ", columns, " FROM ", table_id, ";"))}
 
   # load selected columns and filtered rows from table
-  #FIXME: not working? threw error when tried to load METRICS_10 table with filter year == 2010
-  if(!is.null(columns) & !is.null(filter)){dt <- RMariaDB::dbGetQuery(con, paste0("SELECT ", columns, " FROM ", table_id, "WHERE ", filter, ";"))}
+  if(!is.null(columns) & !is.null(filter)){dt <- RMariaDB::dbGetQuery(con, paste0("SELECT ", columns, " FROM ", table_id, " WHERE ", filter, ";"))}
 
   # disconnect from server
   RMariaDB::dbDisconnect(con);rm(con)
