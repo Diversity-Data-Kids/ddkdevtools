@@ -2,21 +2,23 @@
 % Please edit documentation in R/SQL_load.R
 \name{SQL_load}
 \alias{SQL_load}
+\alias{SQL_load_test}
 \title{SQL_load}
 \usage{
-SQL_load(
+SQL_load_test(
   table_id = NULL,
-  database = NULL,
+  database = "DDK",
   columns = NULL,
   filter = NULL,
-  noisily = TRUE
+  noisily = TRUE,
+  load_table = TRUE
 )
 }
 \arguments{
 \item{table_id}{Name of table from SQL database to load into R environment.
 See SQL_table function for list of tables.}
 
-\item{database}{Name of database to connect to. Default is 'coi'.}
+\item{database}{Name of database to connect to, character vector of length 1. Default is "DDK".}
 
 \item{columns}{Columns to load from table. Default is all columns. Input format is a vector, i.e.
 columns = c("col1", "col2", "col3", ...)}
@@ -24,7 +26,9 @@ columns = c("col1", "col2", "col3", ...)}
 \item{filter}{Filter to apply to table. Default is no filter. Input format is a string (DO NOT USE)
 filter = c("col1 = 'value1', col2 = 'value2', col3 >= 'value3', ...)}
 
-\item{noisily}{Print out dictionary and metadata of table. Default is FALSE.}
+\item{noisily}{Print out dictionary and metadata of table. Default is TRUE}
+
+\item{load_table}{Default is TRUE. If FALSE, function call only prints out dictionary and metadata.}
 }
 \description{
 Wrapper function that helps execute SQL SELECT queries for clients and DDK data team.

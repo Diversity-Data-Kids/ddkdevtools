@@ -2,7 +2,7 @@
 % Please edit documentation in R/SQL_tables.R
 \name{SQL_tables}
 \alias{SQL_tables}
-\title{SQL_tables}
+\title{Returns as data.table a summary table of all tables in a database}
 \usage{
 SQL_tables(database = "DDK")
 }
@@ -10,7 +10,7 @@ SQL_tables(database = "DDK")
 \item{database}{Name of database to connect to, character vector of length 1. Default is "DDK".}
 }
 \description{
-Returns a data.table that lists all tables in a database. Each row contains the table name and metadata for that table.
+Returns a data.table with tables in a database. Each row contains the table's id and metadata for that table.
 }
 \author{
 brian devoe
