@@ -2,10 +2,9 @@
 % Please edit documentation in R/SQL_load.R
 \name{SQL_load}
 \alias{SQL_load}
-\alias{SQL_load_test}
-\title{SQL_load}
+\title{Load table from SQL database}
 \usage{
-SQL_load_test(
+SQL_load(
   table_id = NULL,
   database = "DDK",
   columns = NULL,

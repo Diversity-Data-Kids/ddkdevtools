@@ -1,5 +1,30 @@
 # ddkdevtools
 
+### Example function calls
+
+Load entire table
+
+```{r}
+ADI_HIED <- SQL_load(table = "ADI_HIED", database = "ACS")
+```
+
+Load only a subset of columns
+
+```{r}
+METRICS_10 <- SQL_load(table    = "METRICS_10",
+                       database = "DDK",
+                       columns  = c("geoid", "year", "coi30_met"))
+```
+
+Load only a subset of columns and filter by variable
+
+```{r}
+METRICS_10 <- SQL_load(table    = "METRICS_10",
+                       database = "DDK",
+                       columns  = c("geoid", "year", "coi30_met"),
+                       filter   = c("year = 2010"))
+```
+
 ### To install and update
 
 To install devtools
