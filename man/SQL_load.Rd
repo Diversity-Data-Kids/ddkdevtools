@@ -5,19 +5,20 @@
 \title{Load table from SQL database}
 \usage{
 SQL_load(
-  table_id = NULL,
   database = "DDK",
+  table_id = NULL,
   columns = NULL,
   filter = NULL,
   noisily = TRUE,
-  load_table = TRUE
+  show_metadata_only = FALSE,
+  overwrite = FALSE
 )
 }
 \arguments{
+\item{database}{Name of database to connect to, character vector of length 1. Default is "DDK".}
+
 \item{table_id}{Name of table from SQL database to load into R environment.
 See SQL_table function for list of tables.}
-
-\item{database}{Name of database to connect to, character vector of length 1. Default is "DDK".}
 
 \item{columns}{Columns to load from table. Default is all columns. Input format is a vector, i.e.
 columns = c("col1", "col2", "col3", ...)}
@@ -27,10 +28,20 @@ filter = c("col1 = 'value1', col2 = 'value2', col3 >= 'value3', ...)}
 
 \item{noisily}{Print out dictionary and metadata of table. Default is TRUE}
 
-\item{load_table}{Default is TRUE. If FALSE, function call only prints out dictionary and metadata.}
+\item{show_metadata_only}{Default is FALSE. If TRUE, function call only prints out dictionary and metadata.}
+
+\item{overwrite}{Default is FALSE. If FALSE and table exists in /data/source_data/sql/ folder, function
+will load table from Rdata file. If TRUE, function will download table from SQL database and
+overwrite the existing Rdata file.}
 }
 \description{
-Wrapper function that helps execute SQL SELECT queries for clients and DDK data team.
+Wrapper function for SQL SELECT queries from the SQL database.
+By default, it saves table as Rdata file in the HOME/data/source_data/sql/ folder. If the
+table already exists, it will load the table from the Rdata file, unless
+overwrite is set to TRUE (FALSE by default). If overwrite is set to TRUE, the function
+will load the table from the SQL database and overwrite the existing Rdata file. The
+function needs the HOME vector to exist in the global environment and point to the
+Git root directory.
 }
 \author{
 brian devoe

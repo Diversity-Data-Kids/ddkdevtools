@@ -1,5 +1,9 @@
 # ddkdevtools
 
+### **Important**
+
+SQL_load saves every table to HOME/data/source_data/sql/. It therefore needs the HOME vector to exist and to point to the Git root directory. If you initialize your global environment with COMMON/startup_COMMON.R, this is automatically the case.
+
 ### Example function calls
 
 Load entire table
