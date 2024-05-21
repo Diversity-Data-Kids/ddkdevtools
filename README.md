@@ -37,7 +37,7 @@ To install devtools
 install.packages("devtools")
 ```
 
-To update if you have the package loaded
+To update, if you have the package loaded
 
 ```{r}
 detach("package:ddkdevtools", unload=TRUE)
@@ -45,7 +45,7 @@ remove.packages("ddkdevtools")
 devtools::install_github("Diversity-Data-Kids/ddkdevtools")
 ```
 
-To update if you [don't]{.underline} have the package loaded
+To update, if you don't have the package loaded
 
 ```{r}
 remove.packages("ddkdevtools")
