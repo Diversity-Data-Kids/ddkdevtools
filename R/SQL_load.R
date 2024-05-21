@@ -30,7 +30,7 @@ SQL_load <- function(table_id   = NULL,
                      noisily    = TRUE,
                      load_table = TRUE) {
 
-  print(HOME)
+  # print(HOME)
 
   # start timer
   start <- Sys.time()
