@@ -1,9 +1,9 @@
 #' @name SQL_tables
-#' @title SQL_tables
+#' @title Returns as data.table a summary table of all tables in a database
 #' @author brian devoe
 #'
 #' @description
-#' Returns a data.table that lists all tables in a database. Each row contains the table name and metadata for that table.
+#' Returns a data.table with tables in a database. Each row contains the table's id and metadata for that table.
 #'
 #' @param database Name of database to connect to, character vector of length 1. Default is "DDK".
 
@@ -17,14 +17,19 @@ SQL_tables <- function(database = "DDK"){
     user='dba1',
     password='Password123$')
 
-  # connect to coi database
+  # Check if database exists and remove connection and throw error if it does not
+  db_list <- RMariaDB::dbGetQuery(con, "SHOW DATABASES;")
+  if(!database %in% db_list$Database){
+    RMariaDB::dbDisconnect(con);rm(con) # disconnect and remove connection
+    stop(paste0("database '",  database,"' does not exist"))
+  }
+  rm(db_list)
+
+  # Connect to specific database
   if(is.null(database)){
     RMariaDB::dbExecute(con, "USE DDK;")}
   if(!is.null(database)){
     RMariaDB::dbExecute(con, paste0("USE ", database, ";"))}
-
-  # load tables list
-  tables <- RMariaDB::dbGetQuery(con, "SHOW TABLES;")
 
   # load tables list and convert to vector
   tables <- RMariaDB::dbGetQuery(con, "SHOW TABLES;")
