@@ -3,62 +3,80 @@
 #' @author brian devoe
 #'
 #' @description
-#' Returns a table that lists all the given tables in a database. Each row contains the table name
-#' and metadata for that table.
+#' Returns a data.table that lists all tables in a database. Each row contains the table name and metadata for that table.
 #'
-#' @param database Name of database to connect to. Default is 'coi'.
+#' @param database Name of database to connect to, character vector of length 1. Default is "DDK".
 
-SQL_tables <- function(database = NULL){
+SQL_tables <- function(database = "DDK"){
 
   # Connect to Brandeis office SQL database
-  con <- RMariaDB::dbConnect(RMariaDB::MariaDB(),
-                   host='129.64.58.140', port=3306,
-                   user='dba1', password='Password123$')
+  con <- RMariaDB::dbConnect(
+    RMariaDB::MariaDB(),
+    host='129.64.58.140',
+    port=3306,
+    user='dba1',
+    password='Password123$')
 
   # connect to coi database
   if(is.null(database)){
-    RMariaDB::dbGetQuery(con, "USE coi;")}
+    RMariaDB::dbExecute(con, "USE DDK;")}
   if(!is.null(database)){
-    RMariaDB::dbGetQuery(con, paste0("USE ", database, ";"))}
+    RMariaDB::dbExecute(con, paste0("USE ", database, ";"))}
 
   # load tables list
   tables <- RMariaDB::dbGetQuery(con, "SHOW TABLES;")
 
-  # filter to only metadata
-  tables <- tables[grepl("_metadata", tables$Tables_in_coi),]
+  # load tables list and convert to vector
+  tables <- RMariaDB::dbGetQuery(con, "SHOW TABLES;")
+  tables <- tables[, 1]
 
-  # for loop to get all tables metadata
-  list_tables <- data.table()
-  for(table in tables){
+  # Vector with table_ids
+  table_ids <- tables[!grepl("_dict", tables)]
+  table_ids <- table_ids[!grepl("_metadata", table_ids)]
 
-    # table name for the actual data table (not metadata or dictionary)
-    table2 <- gsub("_metadata", "", table)
-
-    # load metadata
-    dt <- RMariaDB::dbGetQuery(con, paste0("SELECT * FROM ", table, ";"))
-    dt$type <- NULL
-    dt <- tidyr::pivot_wider(dt, names_from = name, values_from = value)
-
-    # column for TRUE/FALSE if dictionary exists
-    dict_exists <- paste0(table2, "_dictionary") %in% tables
-
-    # column count
-    col_count <- RMariaDB::dbGetQuery(con, paste0("SELECT COUNT(*) FROM information_schema.columns WHERE table_name = '", table2, "';"))
-
-    # row count
-    row_count <- RMariaDB::dbGetQuery(con, paste0("SELECT COUNT(*) FROM ", table2, ";"))
-
-    # row and column bind data
-    dt <- cbind(table_id = table2, dict_exists = dict_exists, dt, row_count = row_count$`COUNT(*)`, col_count = col_count$`COUNT(*)`)
-    list_tables <- rbind(list_tables, dt)
+  # Check that metadata and dictionary exist
+  for (tbl in 1:length(table_ids)){
+    if ( (paste0(table_ids[tbl], "_metadata") %in% tables)==F ) print(paste0("metadata table for ", table_ids[tbl], " does not exist"))
+    if ( (paste0(table_ids[tbl], "_dict") %in% tables)==F )     print(paste0("metadata table for ", table_ids[tbl], " does not exist"))
   }
 
+  # for loop to get all tables metadata
+  tbl_list <- vector("list", length(table_ids))
+  for(tbl in 1:length(table_ids)) {
+
+    # load metadata
+    dt <- RMariaDB::dbGetQuery(con, paste0("SELECT * FROM ", paste0(table_ids[tbl], "_metadata"), ";"))
+
+    # Pivot wide
+    dt <- tidyr::pivot_wider(dt, names_from = field, values_from = value)
+
+    # column for TRUE/FALSE if dictionary exists
+    dt$has_dict <- paste0(table_ids[tbl], "_dict") %in% tables
+
+    # column count
+    col_count <- RMariaDB::dbGetQuery(con, paste0("SELECT COUNT(*) FROM information_schema.columns WHERE table_name = '", table_ids[tbl], "';"))
+    dt$col_count <- col_count[1, 1]; rm(col_count)
+
+    # row count
+    row_count <- RMariaDB::dbGetQuery(con, paste0("SELECT COUNT(*) FROM ", table_ids[tbl], ";"))
+    dt$row_count <- row_count[1, 1]; rm(row_count)
+
+    # Collect results
+    tbl_list[[tbl]] <- data.table::as.data.table(dt); rm(dt)
+
+  }
+  rm(tbl)
+
+  # Stack
+  dt <- data.table::rbindlist(tbl_list); rm(tbl_list)
+
   # disconnect from server
-  RMariaDB::dbDisconnect(con);rm(con)
+  RMariaDB::dbDisconnect(con); rm(con)
 
   # save table
   # save(list_tables, file = paste0("data/", database, ".rda"))
 
   # return
-  return(list_tables)
+  return(dt)
+
 }

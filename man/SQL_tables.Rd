@@ -4,14 +4,13 @@
 \alias{SQL_tables}
 \title{SQL_tables}
 \usage{
-SQL_tables(database = NULL)
+SQL_tables(database = "DDK")
 }
 \arguments{
-\item{database}{Name of database to connect to. Default is 'coi'.}
+\item{database}{Name of database to connect to, character vector of length 1. Default is "DDK".}
 }
 \description{
-Returns a table that lists all the given tables in a database. Each row contains the table name
-and metadata for that table.
+Returns a data.table that lists all tables in a database. Each row contains the table name and metadata for that table.
 }
 \author{
 brian devoe

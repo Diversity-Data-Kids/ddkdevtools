@@ -1,5 +1,5 @@
 #' @name   SQL_table_id_list
-#' @title  List table IDs
+#' @title  List/return table IDs
 #' @author brian devoe
 #'
 #' @description

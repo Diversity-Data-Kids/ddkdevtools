@@ -2,7 +2,7 @@
 % Please edit documentation in R/SQL_table_id_list.R
 \name{SQL_table_id_list}
 \alias{SQL_table_id_list}
-\title{List table IDs}
+\title{List/return table IDs}
 \usage{
 SQL_table_id_list(database = "DDK")
 }
