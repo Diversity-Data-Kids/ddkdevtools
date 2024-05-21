@@ -2,15 +2,15 @@
 % Please edit documentation in R/SQL_table_id_list.R
 \name{SQL_table_id_list}
 \alias{SQL_table_id_list}
-\title{SQL_table_id_list}
+\title{List table IDs}
 \usage{
-SQL_table_id_list(database = NULL)
+SQL_table_id_list(database = "DDK")
 }
 \arguments{
-\item{database}{Name of database to connect to. Default is 'coi'.}
+\item{database}{Name of database to connect to, character vector of length 1. Default is "DDK".}
 }
 \description{
-Call function to list available tables in COI SQL database
+List available tables in COI SQL database, excluding dictionary and metadata tables. Returns tables as character vector.
 }
 \author{
 brian devoe

@@ -1,28 +1,44 @@
-#' @name SQL_table_id_list
-#' @title SQL_table_id_list
+#' @name   SQL_table_id_list
+#' @title  List table IDs
 #' @author brian devoe
 #'
 #' @description
-#' Call function to list available tables in COI SQL database
+#' List available tables in COI SQL database, excluding dictionary and metadata tables. Returns tables as character vector.
 #'
-#' @param database Name of database to connect to. Default is 'coi'.
+#' @param database Name of database to connect to, character vector of length 1. Default is "DDK".
 
 
 # function list tables
-SQL_table_id_list <- function(database = NULL){
+SQL_table_id_list <- function(database = "DDK"){
 
  # Connect to Brandeis office SQL database
-  con <- RMariaDB::dbConnect(RMariaDB::MariaDB(),host='129.64.58.140', port=3306,user='dba1',password='Password123$')
+  con <- RMariaDB::dbConnect(
+    RMariaDB::MariaDB(),
+    host='129.64.58.140',
+    port=3306,
+    user='dba1',
+    password='Password123$')
 
-  # connect to coi database
-  RMariaDB::dbGetQuery(con, paste0("USE ", database, ";"))
+  # Connect to database
+  RMariaDB::dbExecute(con, paste0("USE ", database, ";")) # Clemens: changed this to dbExecute
 
-  # load tables list
+  # load tables list and convert to vector
   tables <- RMariaDB::dbGetQuery(con, "SHOW TABLES;")
+  tables <- tables[, 1]
+
+  # Remove dictionary and metadata tables
+  tables <- tables[!grepl("_dict", tables)]
+  tables <- tables[!grepl("_metadata", tables)]
 
   # disconnect from server
-  RMariaDB::dbDisconnect(con);rm(con)
+  RMariaDB::dbDisconnect(con); rm(con)
 
   # return
-  return(tables)
+  cat("\n")
+  cat(paste0("Tables in ", database, " database:\n\n"))
+  cat(paste0("  ", tables), sep="\n")
+  cat("\n")
+
+  return(as.character(tables))
+
 }
