@@ -91,12 +91,14 @@ SQL_load <- function(database  = "DDK",
     print(paste("Connecting to SQL database"))
 
     # Connect to Brandeis office SQL database
-    con <- RMariaDB::dbConnect(
-      RMariaDB::MariaDB(),
-      host='129.64.58.140',
-      port=3306,
-      user='dba1',
-      password='Password123$')
+    # con <- RMariaDB::dbConnect(
+    #   RMariaDB::MariaDB(),
+    #   host='129.64.58.140',
+    #   port=3306,
+    #   user='dba1',
+    #   password='Password123$')
+
+    con <- dbConnect(MariaDB(), host = "129.64.58.140", port = 3306, user = "DDK_read_only", password = "spAce-cat-algebra-7890!$")
 
     # check if database exists and remove connection and throw error if it does not
     db_list <- RMariaDB::dbGetQuery(con, "SHOW DATABASES;")
