@@ -5,6 +5,7 @@
 #' @description
 #' write table from given directory to COI SQL database using bulk/batch method
 #' WARNING: This function will not work unless you have database administrator credentials
+#' WARNING: will throw and error if local infile is not enabled as root user use 'SET GLOBAL local_infile = 1;' to enable
 #'
 #' @param infile path to file to write to SQL database
 #' @param table_id name of table to write to in SQL database
@@ -69,8 +70,9 @@ SQL_write_bulk <- function(infile = NULL, table_id = NULL, database = "DDK"){
   RMariaDB::dbGetQuery(con, query)
   end   <- Sys.time()
 
+  # TODO: I think I can remove this
   # need to remove first row from table
-  RMariaDB::dbGetQuery(con, paste0("DELETE FROM ", table_id, " LIMIT 1;"))
+  # RMariaDB::dbGetQuery(con, paste0("DELETE FROM ", table_id, " LIMIT 1;"))
 
   ##############################################################################
 
