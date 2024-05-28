@@ -10,6 +10,9 @@
 #' @param infile path to file to write to SQL database
 #' @param table_id name of table to write to in SQL database
 #' @param database name of database to write to in SQL database -- default is 'DDK'
+#'
+
+# FIXME: table not saving properly
 
 SQL_write_bulk <- function(infile = NULL, table_id = NULL, database = "DDK"){
 
@@ -66,7 +69,8 @@ SQL_write_bulk <- function(infile = NULL, table_id = NULL, database = "DDK"){
 
   # write table
   start <- Sys.time()
-  query <- paste0("LOAD DATA LOCAL INFILE '", infile, "' INTO TABLE ", table_id," FIELDS TERMINATED BY ',' ENCLOSED BY '\"' LINES TERMINATED BY '\n';")
+  # query <- paste0("LOAD DATA LOCAL INFILE '", infile, "' INTO TABLE ", table_id," FIELDS TERMINATED BY ',' ENCLOSED BY '\"' LINES TERMINATED BY '\n';")
+  query <- paste0("LOAD DATA INFILE '", infile, "' INTO TABLE ", table_id," FIELDS TERMINATED BY ',' ENCLOSED BY '\"' LINES TERMINATED BY '\n';")
   RMariaDB::dbGetQuery(con, query)
   end   <- Sys.time()
 
