@@ -14,7 +14,7 @@
 
 # FIXME: table not saving properly
 
-SQL_write_bulk <- function(infile = NULL, table_id = NULL, database = "DDK"){
+SQL_write_bulk_old <- function(infile = NULL, table_id = NULL, database = "DDK"){
 
   ##############################################################################
 
