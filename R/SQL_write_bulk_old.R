@@ -7,7 +7,7 @@
 #' WARNING: This function will not work unless you have database administrator credentials
 #' WARNING: will throw and error if local infile is not enabled as root user use 'SET GLOBAL local_infile = 1;' to enable
 #'
-#' @param infile path to file to write to SQL database. DO NOT INCLUDE ".csv" in infile string
+#' @param infile path to file to write to SQL database
 #' @param table_id name of table to write to in SQL database
 #' @param database name of database to write to in SQL database -- default is 'DDK'
 #'
@@ -18,15 +18,30 @@ SQL_write_bulk <- function(infile = NULL, table_id = NULL, database = "DDK"){
 
   ##############################################################################
 
-  # load dictionary to get column names and column types
-  dict <- data.table::fread(paste0(infile, "_dict.csv"))
+  # load table to get column names and column types
+  table <- data.table::fread(infile, nrow = 1)
+  table[,1] <- as.character(table[,1])
 
+  # column names
+  names <- colnames(table)
+  for(i in 1:length(names)){
+    if(names[i] == "group"){names[i] <- "`group`"}
+     class <- class(table[[i]])
+    if(class == "character"){
+      names[i] <- paste0(names[i], " text(30)")
+    } else if(class == "integer"){
+      names[i] <- paste0(names[i], " int(30)")
+    } else if(class == "numeric"){
+      names[i] <- paste0(names[i], " double(30,30)")
+    } else if(class == "logical"){
+      names[i] <- paste0(names[i], " boolean")
+    }
+  }
   # fix column names for sql query
   names_str <- ""
-  for(i in 1:nrow(dict)){
-    # asdf
-    if(i == nrow(dict)){names_str <- paste0(names_str, dict$column[i], " ", dict$typeSQL[i])}
-    else {names_str <- paste0(names_str, dict$column[i], " ", dict$typeSQL[i], ", ")}
+  for(i in 1:length(names)){
+    if(i == length(names)){names_str <- paste0(names_str, names[i])}
+    else {names_str <- paste0(names_str, names[i], ", ")}
   }
 
   ##############################################################################
@@ -54,7 +69,7 @@ SQL_write_bulk <- function(infile = NULL, table_id = NULL, database = "DDK"){
 
   # write table
   start <- Sys.time()
-  query <- paste0("LOAD DATA LOCAL INFILE '", infile, ".csv' INTO TABLE ", table_id," FIELDS TERMINATED BY ',' ENCLOSED BY '\"' LINES TERMINATED BY '\n';")
+  query <- paste0("LOAD DATA LOCAL INFILE '", infile, "' INTO TABLE ", table_id," FIELDS TERMINATED BY ',' ENCLOSED BY '\"' LINES TERMINATED BY '\n';")
   # query <- paste0("LOAD DATA INFILE '", infile, "' INTO TABLE ", table_id," FIELDS TERMINATED BY ',' ENCLOSED BY '\"' LINES TERMINATED BY '\n';")
   RMariaDB::dbGetQuery(con, query)
   end   <- Sys.time()
