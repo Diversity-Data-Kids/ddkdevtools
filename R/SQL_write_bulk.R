@@ -54,7 +54,8 @@ SQL_write_bulk <- function(infile = NULL, table_id = NULL, database = "DDK"){
 
   # write table
   start <- Sys.time()
-  query <- paste0("LOAD DATA LOCAL INFILE '", infile, ".csv' INTO TABLE ", table_id," FIELDS TERMINATED BY ',' ENCLOSED BY '\"' LINES TERMINATED BY '\n' IGNORE 1 ROWS;")
+  # query <- paste0("LOAD DATA LOCAL INFILE '", infile, ".csv' INTO TABLE ", table_id," FIELDS TERMINATED BY ',' ENCLOSED BY '\"' LINES TERMINATED BY '\n' IGNORE 1 ROWS;")
+  query <- paste0("LOAD DATA LOCAL INFILE '", infile, ".csv' INTO TABLE ", table_id," FIELDS TERMINATED BY ',' ENCLOSED BY '\\\"' LINES TERMINATED BY '\r\n' IGNORE 1 ROWS;")
   RMariaDB::dbGetQuery(con, query)
   end   <- Sys.time()
 
