@@ -29,6 +29,22 @@ SQL_write_bulk <- function(infile = NULL, table_id = NULL, database = "DDK"){
     else {names_str <- paste0(names_str, dict$column[i], " ", dict$typeSQL[i], ", ")}
   }
 
+
+
+  # FIXME: --- testing these changes to account for NULL values in the data
+  str1 <- "("
+  for(i in 1:nrow(dict)){
+    if(i == nrow(dict)){str1 <- paste0(str1, "@", dict$column[i], ")")}
+    else {str1 <- paste0(str1, "@", dict$column[i], ", ")}
+  }
+
+  str2 <- ""
+  for(i in 1:nrow(dict)){
+     if(i==1){str2 <- paste0(str2, "SET ", dict$column[i], " = NULLIF(@", dict$column[i], ", '' OR ' '), ")}
+     if(i == nrow(dict)){str2 <- paste0(str2, "", dict$column[i], " = NULLIF(@", dict$column[i], ", '' OR ' ') ")}
+     else{str2 <- paste0(str2, "", dict$column[i], " = NULLIF(@", dict$column[i], ", '' OR ' '), ")}
+  }
+
   ##############################################################################
 
   # TODO: fix connection
@@ -50,12 +66,14 @@ SQL_write_bulk <- function(infile = NULL, table_id = NULL, database = "DDK"){
   create_table <- paste0("CREATE TABLE ", table_id, " (", names_str, ");")
   RMariaDB::dbExecute(con, create_table)
 
+
+
   ##############################################################################
 
   # write table
   start <- Sys.time()
   # query <- paste0("LOAD DATA LOCAL INFILE '", infile, ".csv' INTO TABLE ", table_id," FIELDS TERMINATED BY ',' ENCLOSED BY '\"' LINES TERMINATED BY '\n' IGNORE 1 ROWS;")
-  query <- paste0("LOAD DATA LOCAL INFILE '", infile, ".csv' INTO TABLE ", table_id," FIELDS TERMINATED BY ',' ENCLOSED BY '\\\"' LINES TERMINATED BY '\r\n' IGNORE 1 ROWS;")
+  query <- paste0("LOAD DATA LOCAL INFILE '", infile, ".csv' INTO TABLE ", table_id," FIELDS TERMINATED BY ',' ENCLOSED BY '\"' LINES TERMINATED BY '\n'", paste0(str1,str2), ";")
   RMariaDB::dbGetQuery(con, query)
   end   <- Sys.time()
 
