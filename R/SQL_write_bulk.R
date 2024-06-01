@@ -62,9 +62,7 @@ SQL_write_bulk <- function(infile = NULL, table_id = NULL, database = "DDK", HOM
   RMariaDB::dbExecute(con, paste0("USE ", database, ";"))
 
   # delete if overwrite == TRUE
-  if(overwrite == TRUE){
-    RMariaDB::dbExecute(con, paste0("DROP TABLE ", table_id, ";"))
-  }
+  if(overwrite == TRUE){RMariaDB::dbExecute(con, paste0("DROP TABLE ", table_id, ";"))}
 
   # create table
   create_table <- paste0("CREATE TABLE ", table_id, " (", cols, ");")
