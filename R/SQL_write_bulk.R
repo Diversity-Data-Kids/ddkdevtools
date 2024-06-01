@@ -1,3 +1,4 @@
+####################################################################################################
 #' @name SQL_write_bulk
 #' @title SQL_write_bulk
 #' @author brian devoe
@@ -6,14 +7,20 @@
 #' write table from given directory to COI SQL database using bulk/batch method
 #' WARNING: This function will not work unless you have database administrator credentials
 #' WARNING: will throw and error if local infile is not enabled as root user use 'SET GLOBAL local_infile = 1;' to enable
-#' WARNING: Need HOME file to exist
 #'
 #' @param infile path to file to write to SQL database. DO NOT INCLUDE ".csv" in infile string
 #' @param table_id name of table to write to in SQL database
 #' @param database name of database to write to in SQL database -- default is 'DDK'
 
+# DONE: add overwrite option
+# DONE: check if dictionary exists
+# TODO: add creditionals requirement
+# TODO: add check for database exists
+####################################################################################################
 
-SQL_write_bulk <- function(infile = NULL, table_id = NULL, database = "DDK", HOME = NULL){
+
+
+SQL_write_bulk <- function(infile = NULL, table_id = NULL, database = "DDK", HOME = NULL, overwrite = FALSE){
 
   # check if HOME exists
   if(!exists("HOME")){stop("HOME does not exist")}
@@ -24,6 +31,7 @@ SQL_write_bulk <- function(infile = NULL, table_id = NULL, database = "DDK", HOM
   ##############################################################################
 
   # load dictionary to get column names and column types
+  if(!file.exists(paste0(infile, "_dict.csv"))){return("Dictionary file does not exist!")}
   dict <- data.table::fread(paste0(infile, "_dict.csv"))
 
   # fix column names for sql query
@@ -34,12 +42,12 @@ SQL_write_bulk <- function(infile = NULL, table_id = NULL, database = "DDK", HOM
   }
 
   # load temporary data file
-  tmp <- data.table::fread(paste0(infile, ".csv"))
+  tmp <- data.table::fread(paste0(infile, ".csv"), colClasses = dict$typeR)
 
   # replace missing values
   tmp[tmp==""]   <- NA
   tmp[tmp== Inf] <- NA # can we silence this warning?
-  tmp[tmp==-Inf] <- NA
+  tmp[tmp==-Inf] <- NA # can we silence this warning?
 
   # write temporary data file
   tmp_path <- paste0(HOME, "data/tmp/", table_id, "_tmp.csv")
@@ -52,6 +60,11 @@ SQL_write_bulk <- function(infile = NULL, table_id = NULL, database = "DDK", HOM
 
   # select coi db
   RMariaDB::dbExecute(con, paste0("USE ", database, ";"))
+
+  # delete if overwrite == TRUE
+  if(overwrite == TRUE){
+    RMariaDB::dbExecute(con, paste0("DROP TABLE ", table_id, ";"))
+  }
 
   # create table
   create_table <- paste0("CREATE TABLE ", table_id, " (", cols, ");")
