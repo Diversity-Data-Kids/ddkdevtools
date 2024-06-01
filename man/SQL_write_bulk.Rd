@@ -4,10 +4,10 @@
 \alias{SQL_write_bulk}
 \title{SQL_write_bulk}
 \usage{
-SQL_write_bulk(infile = NULL, table_id = NULL, database = "DDK")
+SQL_write_bulk(infile = NULL, table_id = NULL, database = "DDK", HOME = NULL)
 }
 \arguments{
-\item{infile}{path to file to write to SQL database}
+\item{infile}{path to file to write to SQL database. DO NOT INCLUDE ".csv" in infile string}
 
 \item{table_id}{name of table to write to in SQL database}
 
@@ -16,6 +16,8 @@ SQL_write_bulk(infile = NULL, table_id = NULL, database = "DDK")
 \description{
 write table from given directory to COI SQL database using bulk/batch method
 WARNING: This function will not work unless you have database administrator credentials
+WARNING: will throw and error if local infile is not enabled as root user use 'SET GLOBAL local_infile = 1;' to enable
+WARNING: Need HOME file to exist
 }
 \author{
 brian devoe

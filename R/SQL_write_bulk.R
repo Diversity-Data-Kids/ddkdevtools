@@ -6,15 +6,20 @@
 #' write table from given directory to COI SQL database using bulk/batch method
 #' WARNING: This function will not work unless you have database administrator credentials
 #' WARNING: will throw and error if local infile is not enabled as root user use 'SET GLOBAL local_infile = 1;' to enable
+#' WARNING: Need HOME file to exist
 #'
 #' @param infile path to file to write to SQL database. DO NOT INCLUDE ".csv" in infile string
 #' @param table_id name of table to write to in SQL database
 #' @param database name of database to write to in SQL database -- default is 'DDK'
-#'
 
-# FIXME: table not saving properly
 
-SQL_write_bulk <- function(infile = NULL, table_id = NULL, database = "DDK"){
+SQL_write_bulk <- function(infile = NULL, table_id = NULL, database = "DDK", HOME = NULL){
+
+  # check if HOME exists
+  if(!exists("HOME")){stop("HOME does not exist")}
+
+  # create tmp directory if does not exist
+  if (!dir.exists(paste0(HOME, "data/tmp"))){dir.create(paste0(HOME, "data/tmp"))}
 
   ##############################################################################
 
@@ -22,69 +27,49 @@ SQL_write_bulk <- function(infile = NULL, table_id = NULL, database = "DDK"){
   dict <- data.table::fread(paste0(infile, "_dict.csv"))
 
   # fix column names for sql query
-  names_str <- ""
+  cols <- ""
   for(i in 1:nrow(dict)){
-    # asdf
-    if(i == nrow(dict)){names_str <- paste0(names_str, dict$column[i], " ", dict$typeSQL[i])}
-    else {names_str <- paste0(names_str, dict$column[i], " ", dict$typeSQL[i], ", ")}
+    if(i == nrow(dict)){cols <- paste0(cols, dict$column[i], " ", dict$typeSQL[i])}
+    else {cols <- paste0(cols, dict$column[i], " ", dict$typeSQL[i], ", ")}
   }
 
+  # load temporary data file
+  tmp <- data.table::fread(paste0(infile, ".csv"))
 
+  # replace missing values
+  tmp[tmp==""]   <- NA
+  tmp[tmp== Inf] <- NA # can we silence this warning?
+  tmp[tmp==-Inf] <- NA
 
-  # FIXME: --- testing these changes to account for NULL values in the data
-  str1 <- "("
-  for(i in 1:nrow(dict)){
-    if(i == nrow(dict)){str1 <- paste0(str1, "@", dict$column[i], ")")}
-    else {str1 <- paste0(str1, "@", dict$column[i], ", ")}
-  }
-
-  str2 <- ""
-  for(i in 1:nrow(dict)){
-     if(i==1){str2 <- paste0(str2, "SET ", dict$column[i], " = NULLIF(@", dict$column[i], ", '' OR ' '), ")}
-     if(i == nrow(dict)){str2 <- paste0(str2, "", dict$column[i], " = NULLIF(@", dict$column[i], ", '' OR ' ') ")}
-     else{str2 <- paste0(str2, "", dict$column[i], " = NULLIF(@", dict$column[i], ", '' OR ' '), ")}
-  }
+  # write temporary data file
+  tmp_path <- paste0(HOME, "data/tmp/", table_id, "_tmp.csv")
+  data.table::fwrite(tmp, tmp_path, na = "\\N")
 
   ##############################################################################
 
-  # TODO: fix connection
   # connect to database
   con <- RMariaDB::dbConnect(RMariaDB::MariaDB(),host='129.64.58.140',port=3306,user='dba1',password='Password123$')
 
   # select coi db
   RMariaDB::dbExecute(con, paste0("USE ", database, ";"))
 
-  # MySQL syntax for creating a table
-  # CREATE TABLE table_id (
-  #     column1 datatype,
-  #     column2 datatype,
-  #     column3 datatype,
-  #    ....
-  # );
-
   # create table
-  create_table <- paste0("CREATE TABLE ", table_id, " (", names_str, ");")
+  create_table <- paste0("CREATE TABLE ", table_id, " (", cols, ");")
   RMariaDB::dbExecute(con, create_table)
-
-
-
-  ##############################################################################
 
   # write table
   start <- Sys.time()
-  # query <- paste0("LOAD DATA LOCAL INFILE '", infile, ".csv' INTO TABLE ", table_id," FIELDS TERMINATED BY ',' ENCLOSED BY '\"' LINES TERMINATED BY '\n' IGNORE 1 ROWS;")
-  query <- paste0("LOAD DATA LOCAL INFILE '", infile, ".csv' INTO TABLE ", table_id," FIELDS TERMINATED BY ',' ENCLOSED BY '\"' LINES TERMINATED BY '\n'", paste0(str1,str2), ";")
+  query <- paste0("LOAD DATA LOCAL INFILE '", tmp_path, "' INTO TABLE ", table_id," FIELDS TERMINATED BY ',' ENCLOSED BY '\"' LINES TERMINATED BY '\r\n' IGNORE 1 ROWS;")
   RMariaDB::dbGetQuery(con, query)
   end   <- Sys.time()
 
-  # TODO: I think I can remove this
-  # need to remove first row from table
-  # RMariaDB::dbGetQuery(con, paste0("DELETE FROM ", table_id, " LIMIT 1;"))
+  # disconnect from server
+  RMariaDB::dbDisconnect(con);rm(con)
 
   ##############################################################################
 
-  # disconnect from server
-  RMariaDB::dbDisconnect(con);rm(con)
+  # delete temporary file
+  file.remove(tmp_path)
 
   # return time to write
   return(paste0("Time to write table: ", end-start))
