@@ -84,7 +84,7 @@ SQL_write_bulk <- function(table = NULL, dict = NULL, table_id = NULL, database 
   total_seconds <- as.numeric(difftime(Sys.time(), start, units = "secs"))
   minutes <- floor(total_seconds/60)
   seconds <- round(total_seconds%%60, 2)
-  cat(sprintf("Time to download table from SQL: %d minutes and %.2f seconds\n", minutes, seconds))
+  cat(sprintf("Time to write table to SQL: %d minutes and %.2f seconds\n", minutes, seconds))
 
   # test if data is identical to table inserted into SQL database
   if(test == TRUE){
@@ -102,5 +102,8 @@ SQL_write_bulk <- function(table = NULL, dict = NULL, table_id = NULL, database 
 
   # delete temporary file
   file.remove(tmp_path)
+
+  # return message
+  return("SQL_write_biulk complete")
 
 }
