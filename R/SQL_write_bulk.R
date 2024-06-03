@@ -64,7 +64,7 @@ SQL_write_bulk <- function(infile = NULL, table_id = NULL, database = "DDK", HOM
   RMariaDB::dbExecute(con, paste0("USE ", database, ";"))
 
   # check if table exists in database
-  check <- RMariaDB::dbGetQuery(con, "SELECT count(*) FROM information_schema.tables WHERE table_schema = 'testing' AND table_name = 'povrate1_test' LIMIT 1;")
+  check <- RMariaDB::dbGetQuery(con, paste0("SELECT count(*) FROM information_schema.tables WHERE table_schema = '",database, "' AND table_name = '", table_id, "' LIMIT 1;"))
 
   # delete if overwrite == TRUE & check[[1]]
   if(overwrite == TRUE & check[[1]]==1){RMariaDB::dbExecute(con, paste0("DROP TABLE ", table_id, ";"))}
