@@ -16,7 +16,7 @@
 # DONE: check if dictionary exists
 # TODO: add creditionals requirement
 # TODO: add check for database exists
-# TODO: add check for table exists -- otherwise overwrite will fail if table does not exist while overwrite = TRUE
+# DONE: add check for table exists -- otherwise overwrite will fail if table does not exist while overwrite = TRUE
 # TODO: add warning for infile parameter to NOT include ".csv" at end?
 ####################################################################################################
 
@@ -60,12 +60,14 @@ SQL_write_bulk <- function(infile = NULL, table_id = NULL, database = "DDK", HOM
   # connect to database
   con <- RMariaDB::dbConnect(RMariaDB::MariaDB(),host='129.64.58.140',port=3306,user='dba1',password='Password123$')
 
-  # select coi db
+  # select database
   RMariaDB::dbExecute(con, paste0("USE ", database, ";"))
 
-  # delete if overwrite == TRUE
-  # FIXME: need to add check if table exists first
-  # if(overwrite == TRUE){RMariaDB::dbExecute(con, paste0("DROP TABLE ", table_id, ";"))}
+  # check if table exists in database
+  check <- RMariaDB::dbGetQuery(con, "SELECT count(*) FROM information_schema.tables WHERE table_schema = 'testing' AND table_name = 'povrate1_test' LIMIT 1;")
+
+  # delete if overwrite == TRUE & check[[1]]
+  if(overwrite == TRUE & check[[1]]==1){RMariaDB::dbExecute(con, paste0("DROP TABLE ", table_id, ";"))}
 
   # create table
   create_table <- paste0("CREATE TABLE ", table_id, " (", cols, ");")
