@@ -4,20 +4,32 @@
 \alias{SQL_write_bulk}
 \title{SQL_write_bulk}
 \usage{
-SQL_write_bulk(infile = NULL, table_id = NULL, database = "DDK", HOME = NULL)
+SQL_write_bulk(
+  table = NULL,
+  dict = NULL,
+  table_id = NULL,
+  database = "DDK",
+  overwrite = FALSE,
+  test = FALSE
+)
 }
 \arguments{
-\item{infile}{path to file to write to SQL database. DO NOT INCLUDE ".csv" in infile string}
+\item{table}{data.table within R environment to write to SQL database}
 
-\item{table_id}{name of table to write to in SQL database}
+\item{dict}{dictionary of table}
+
+\item{table_id}{name of table that will appear in SQL database}
 
 \item{database}{name of database to write to in SQL database -- default is 'DDK'}
+
+\item{overwrite}{logical to overwrite table if it exists -- default is FALSE}
+
+\item{test}{logical to test function by checking if original data.frame is identical to data loaded
+into SQL server -- default is FALSE}
 }
 \description{
 write table from given directory to COI SQL database using bulk/batch method
-WARNING: This function will not work unless you have database administrator credentials
 WARNING: will throw and error if local infile is not enabled as root user use 'SET GLOBAL local_infile = 1;' to enable
-WARNING: Need HOME file to exist
 }
 \author{
 brian devoe

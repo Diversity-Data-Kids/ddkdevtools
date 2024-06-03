@@ -5,30 +5,33 @@
 #'
 #' @description
 #' write table from given directory to COI SQL database using bulk/batch method
-#' WARNING: This function will not work unless you have database administrator credentials
 #' WARNING: will throw and error if local infile is not enabled as root user use 'SET GLOBAL local_infile = 1;' to enable
 #'
-#' @param infile path to file to write to SQL database. DO NOT INCLUDE ".csv" in infile string
-#' @param table_id name of table to write to in SQL database
+#' @param table data.table within R environment to write to SQL database
+#' @param dict  dictionary of table
+#' @param table_id name of table that will appear in SQL database
 #' @param database name of database to write to in SQL database -- default is 'DDK'
+#' @param overwrite logical to overwrite table if it exists -- default is FALSE
+#' @param test logical to test function by checking if original data.frame is identical to data loaded
+#'             into SQL server -- default is FALSE
 
-# DONE: add overwrite option
-# DONE: check if dictionary exists
-# TODO: add creditionals requirement
+# TODO: add creditionals requirement and remove dba1 credentials from function
 # TODO: add check for database exists
 # TODO: check for table exists what if check > 1 ?
-# DONE: add check for table exists -- otherwise overwrite will fail if table does not exist while overwrite = TRUE
 ####################################################################################################
 
 
 
-SQL_write_bulk <- function(table = NULL, dict = NULL, table_id = NULL, database = "DDK", overwrite = FALSE){
+SQL_write_bulk <- function(table = NULL, dict = NULL, table_id = NULL, database = "DDK", overwrite = FALSE, test = FALSE){
 
   # Check if HOME vector exists
   if (!exists("HOME")) stop("HOME vector does not exist in global environment. Please set HOME to Git root directory.")
 
   # check if table exists
   if(is.null(table)){stop("table required")}
+
+  # check if table_id exists
+  if(is.null(table_id)){stop("table_id required")}
 
   # check if dictionary exists
   if(is.null(dict)){stop("dictionary required")}
@@ -37,13 +40,6 @@ SQL_write_bulk <- function(table = NULL, dict = NULL, table_id = NULL, database 
   if (!dir.exists(paste0(HOME, "data/tmp"))){dir.create(paste0(HOME, "data/tmp"))}
 
   ##############################################################################
-
-  # fix column names for sql query
-  cols <- ""
-  for(i in 1:nrow(dict)){
-    if(i == nrow(dict)){cols <- paste0(cols, dict$column[i], " ", dict$typeSQL[i])}
-    else {cols <- paste0(cols, dict$column[i], " ", dict$typeSQL[i], ", ")}
-  }
 
   # replace missing values
   table[table==""]   <- NA
@@ -68,15 +64,31 @@ SQL_write_bulk <- function(table = NULL, dict = NULL, table_id = NULL, database 
   # delete if overwrite == TRUE & check[[1]]
   if(overwrite == TRUE & check[[1]]==1){RMariaDB::dbExecute(con, paste0("DROP TABLE ", table_id, ";"))}
 
+  # fix column names for create table query
+  cols <- ""
+  for(i in 1:nrow(dict)){
+    if(i == nrow(dict)){cols <- paste0(cols, dict$column[i], " ", dict$typeSQL[i])}
+    else {cols <- paste0(cols, dict$column[i], " ", dict$typeSQL[i], ", ")}
+  }
+
   # create table
   create_table <- paste0("CREATE TABLE ", table_id, " (", cols, ");")
   RMariaDB::dbExecute(con, create_table)
 
-  # write table
+  # bulk insert query: if local infile is not enabled as root user use 'SET GLOBAL local_infile = 1;' to enable
   start <- Sys.time()
   query <- paste0("LOAD DATA LOCAL INFILE '", tmp_path, "' INTO TABLE ", table_id," FIELDS TERMINATED BY ',' ENCLOSED BY '\"' LINES TERMINATED BY '\r\n';")
   RMariaDB::dbGetQuery(con, query)
   end   <- Sys.time()
+
+  # test if data is identical to table inserted into SQL database
+  if(test == TRUE){
+    # read table from database
+    table_sql <- RMariaDB::dbGetQuery(con, paste0("SELECT * FROM ", table_id, ";"))
+    # compare
+    if(identical(table, table_sql)){print("Data is identical to SQL database")}
+    else {print("Data is not identical to SQL database")}
+  }
 
   # disconnect from server
   RMariaDB::dbDisconnect(con);rm(con)
