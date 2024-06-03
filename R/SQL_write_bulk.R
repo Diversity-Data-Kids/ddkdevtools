@@ -91,8 +91,8 @@ SQL_write_bulk <- function(table = NULL, dict = NULL, table_id = NULL, database 
     # read table from database
     table_sql <- data.table::as.data.table(RMariaDB::dbGetQuery(con, paste0("SELECT * FROM ", table_id, ";")))
     # compare
-    if(identical(table, table_sql)){print("PASSED: data inserted into SQL database is identical to original data")}
-    else {print("FAILED: data inserted into SQL database is not identical to original data")}
+    if(identical(table, table_sql)){sprintf("PASSED: data inserted into SQL database is identical to original data")}
+    else {sprintf("FAILED: data inserted into SQL database is not identical to original data")}
   }
 
   # disconnect from server
