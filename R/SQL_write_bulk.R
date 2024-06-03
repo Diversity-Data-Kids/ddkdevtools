@@ -16,7 +16,8 @@
 # DONE: check if dictionary exists
 # TODO: add creditionals requirement
 # TODO: add check for database exists
-# TODO: add warning for infile parameter to NOT include ".csv" at end? 
+# TODO: add check for table exists -- otherwise overwrite will fail if table does not exist while overwrite = TRUE
+# TODO: add warning for infile parameter to NOT include ".csv" at end?
 ####################################################################################################
 
 
@@ -63,7 +64,8 @@ SQL_write_bulk <- function(infile = NULL, table_id = NULL, database = "DDK", HOM
   RMariaDB::dbExecute(con, paste0("USE ", database, ";"))
 
   # delete if overwrite == TRUE
-  if(overwrite == TRUE){RMariaDB::dbExecute(con, paste0("DROP TABLE ", table_id, ";"))}
+  # FIXME: need to add check if table exists first
+  # if(overwrite == TRUE){RMariaDB::dbExecute(con, paste0("DROP TABLE ", table_id, ";"))}
 
   # create table
   create_table <- paste0("CREATE TABLE ", table_id, " (", cols, ");")
