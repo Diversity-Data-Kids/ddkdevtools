@@ -22,19 +22,21 @@
 
 
 
-SQL_write_bulk <- function(infile = NULL, table_id = NULL, database = "DDK", HOME = NULL, overwrite = FALSE){
+SQL_write_bulk <- function(table = NULL, dict = NULL, table_id = NULL, database = "DDK", HOME = NULL, overwrite = FALSE){
 
   # check if HOME exists
-  if(!exists("HOME")){stop("HOME does not exist")}
+  if(is.null(HOME)){stop("HOME required")}
+
+  # check if table exists
+  if(is.null(table)){stop("table required")}
+
+  # check if dictionary exists
+  if(is.null(dict)){stop("dictionary required")}
 
   # create tmp directory if does not exist
   if (!dir.exists(paste0(HOME, "data/tmp"))){dir.create(paste0(HOME, "data/tmp"))}
 
   ##############################################################################
-
-  # load dictionary to get column names and column types
-  if(!file.exists(paste0(infile, "_dict.csv"))){return("Dictionary file does not exist!")}
-  dict <- data.table::fread(paste0(infile, "_dict.csv"))
 
   # fix column names for sql query
   cols <- ""
@@ -43,17 +45,14 @@ SQL_write_bulk <- function(infile = NULL, table_id = NULL, database = "DDK", HOM
     else {cols <- paste0(cols, dict$column[i], " ", dict$typeSQL[i], ", ")}
   }
 
-  # load temporary data file
-  tmp <- data.table::fread(paste0(infile, ".csv"), colClasses = dict$typeR)
-
   # replace missing values
-  tmp[tmp==""]   <- NA
-  tmp[tmp== Inf] <- NA # can we silence this warning?
-  tmp[tmp==-Inf] <- NA # can we silence this warning?
+  table[table==""]   <- NA
+  table[table== Inf] <- NA # can we silence this warning?
+  table[table==-Inf] <- NA # can we silence this warning?
 
   # write temporary data file
   tmp_path <- paste0(HOME, "data/tmp/", table_id, "_tmp.csv")
-  data.table::fwrite(tmp, tmp_path, na = "\\N")
+  data.table::fwrite(table, tmp_path, na = "\\N")
 
   ##############################################################################
 
