@@ -78,7 +78,7 @@ SQL_write_bulk <- function(table = NULL, dict = NULL, table_id = NULL, database 
   # bulk insert query: if local infile is not enabled as root user use 'SET GLOBAL local_infile = 1;' to enable
   start <- Sys.time()
   query <- paste0("LOAD DATA LOCAL INFILE '", tmp_path, "' INTO TABLE ", table_id," FIELDS TERMINATED BY ',' ENCLOSED BY '\"' LINES TERMINATED BY '\r\n';")
-  RMariaDB::dbGetQuery(con, query)
+  RMariaDB::dbExecute(con, query)
 
   # time
   total_seconds <- as.numeric(difftime(Sys.time(), start, units = "secs"))
