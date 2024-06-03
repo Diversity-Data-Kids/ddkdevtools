@@ -79,15 +79,20 @@ SQL_write_bulk <- function(table = NULL, dict = NULL, table_id = NULL, database 
   start <- Sys.time()
   query <- paste0("LOAD DATA LOCAL INFILE '", tmp_path, "' INTO TABLE ", table_id," FIELDS TERMINATED BY ',' ENCLOSED BY '\"' LINES TERMINATED BY '\r\n';")
   RMariaDB::dbGetQuery(con, query)
-  end   <- Sys.time()
+
+  # time
+  total_seconds <- as.numeric(difftime(Sys.time(), start, units = "secs"))
+  minutes <- floor(total_seconds/60)
+  seconds <- round(total_seconds%%60, 2)
+  cat(sprintf("Time to download table from SQL: %d minutes and %.2f seconds\n", minutes, seconds))
 
   # test if data is identical to table inserted into SQL database
   if(test == TRUE){
     # read table from database
     table_sql <- data.table::as.data.table(RMariaDB::dbGetQuery(con, paste0("SELECT * FROM ", table_id, ";")))
     # compare
-    if(identical(table, table_sql)){print("Data is identical to SQL database")}
-    else {print("Data is not identical to SQL database")}
+    if(identical(table, table_sql)){print("PASSED: data inserted into SQL database is identical to original data")}
+    else {print("FAILED: data inserted into SQL database is not identical to original data")}
   }
 
   # disconnect from server
@@ -97,8 +102,5 @@ SQL_write_bulk <- function(table = NULL, dict = NULL, table_id = NULL, database 
 
   # delete temporary file
   file.remove(tmp_path)
-
-  # return time to write
-  return(paste0("Time to write table: ", end-start))
 
 }
