@@ -16,6 +16,7 @@
 # DONE: check if dictionary exists
 # TODO: add creditionals requirement
 # TODO: add check for database exists
+# TODO: check for table exists what if check > 1 ?
 # DONE: add check for table exists -- otherwise overwrite will fail if table does not exist while overwrite = TRUE
 ####################################################################################################
 
