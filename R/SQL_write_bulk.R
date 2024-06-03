@@ -17,15 +17,14 @@
 # TODO: add creditionals requirement
 # TODO: add check for database exists
 # DONE: add check for table exists -- otherwise overwrite will fail if table does not exist while overwrite = TRUE
-# TODO: add warning for infile parameter to NOT include ".csv" at end?
 ####################################################################################################
 
 
 
-SQL_write_bulk <- function(table = NULL, dict = NULL, table_id = NULL, database = "DDK", HOME = NULL, overwrite = FALSE){
+SQL_write_bulk <- function(table = NULL, dict = NULL, table_id = NULL, database = "DDK", overwrite = FALSE){
 
-  # check if HOME exists
-  if(is.null(HOME)){stop("HOME required")}
+  # Check if HOME vector exists
+  if (!exists("HOME")) stop("HOME vector does not exist in global environment. Please set HOME to Git root directory.")
 
   # check if table exists
   if(is.null(table)){stop("table required")}
@@ -52,7 +51,7 @@ SQL_write_bulk <- function(table = NULL, dict = NULL, table_id = NULL, database 
 
   # write temporary data file
   tmp_path <- paste0(HOME, "data/tmp/", table_id, "_tmp.csv")
-  data.table::fwrite(table, tmp_path, na = "\\N")
+  data.table::fwrite(table, tmp_path, na = "\\N", row.names = F, col.names = F)
 
   ##############################################################################
 
@@ -74,7 +73,7 @@ SQL_write_bulk <- function(table = NULL, dict = NULL, table_id = NULL, database 
 
   # write table
   start <- Sys.time()
-  query <- paste0("LOAD DATA LOCAL INFILE '", tmp_path, "' INTO TABLE ", table_id," FIELDS TERMINATED BY ',' ENCLOSED BY '\"' LINES TERMINATED BY '\r\n' IGNORE 1 ROWS;")
+  query <- paste0("LOAD DATA LOCAL INFILE '", tmp_path, "' INTO TABLE ", table_id," FIELDS TERMINATED BY ',' ENCLOSED BY '\"' LINES TERMINATED BY '\r\n';")
   RMariaDB::dbGetQuery(con, query)
   end   <- Sys.time()
 
