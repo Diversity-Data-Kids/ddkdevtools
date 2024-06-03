@@ -16,6 +16,7 @@
 # DONE: check if dictionary exists
 # TODO: add creditionals requirement
 # TODO: add check for database exists
+# TODO: add warning for infile parameter to NOT include ".csv" at end? 
 ####################################################################################################
 
 
