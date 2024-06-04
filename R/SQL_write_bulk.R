@@ -114,6 +114,6 @@ SQL_write_bulk <- function(table = NULL, dict = NULL, table_id = NULL, database 
   file.remove(tmp_path)
 
   # return message
-  return("SQL_write_biulk complete")
+  return("SQL_write_bulk complete")
 
 }

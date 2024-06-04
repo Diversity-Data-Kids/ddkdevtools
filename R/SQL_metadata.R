@@ -19,10 +19,10 @@ SQL_metadata <- function(table_id = NULL, database= "DDK") {
   # Connect to Brandeis office SQL database
   con <- RMariaDB::dbConnect(
     RMariaDB::MariaDB(),
-    host='129.64.58.140',
-    port=3306,
-    user='dba1',
-    password='Password123$')
+    host="129.64.58.140",
+    port="3306",
+    user="DDK_read_only",
+    password="spAce-cat-algebra-7890!$")
 
   # check if database exists and remove connection and throw error if it does not
   db_list <- RMariaDB::dbGetQuery(con, "SHOW DATABASES;")
@@ -40,8 +40,7 @@ SQL_metadata <- function(table_id = NULL, database= "DDK") {
   tables <- tables[, 1]
 
   # Vector with table_ids
-  table_ids <- tables[!grepl("_dict", tables)]
-  table_ids <- table_ids[!grepl("_metadata", table_ids)]
+  table_ids <- tables[grepl("_metadata", tables)]
 
   # check if table exists and remove connection and throw error if it does not
   if(!table_id %in% table_ids){
@@ -53,8 +52,8 @@ SQL_metadata <- function(table_id = NULL, database= "DDK") {
 
   # Check if metadata exist and if so print it
   cat("\n")
-  if ( paste0(table_id, "_metadata") %in% tables ) {
-    metadata <- RMariaDB::dbGetQuery(con, paste0("SELECT * FROM ", table_id, "_metadata;"))
+  if ( table_id %in% tables ) {
+    metadata <- RMariaDB::dbGetQuery(con, paste0("SELECT * FROM ", table_id, ";"))
     print(metadata)
   } else {
     print(paste0("Metadata for ", table_id, " does not exist."))

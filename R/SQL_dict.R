@@ -19,10 +19,10 @@ SQL_dict <- function(table_id = NULL, database   = "DDK") {
   # Connect to Brandeis office SQL database
   con <- RMariaDB::dbConnect(
     RMariaDB::MariaDB(),
-    host='129.64.58.140',
-    port=3306,
-    user='dba1',
-    password='Password123$')
+    host="129.64.58.140",
+    port="3306",
+    user="DDK_read_only",
+    password="spAce-cat-algebra-7890!$")
 
   # check if database exists and remove connection and throw error if it does not
   db_list <- RMariaDB::dbGetQuery(con, "SHOW DATABASES;")
@@ -40,22 +40,21 @@ SQL_dict <- function(table_id = NULL, database   = "DDK") {
   tables <- tables[, 1]
 
   # Vector with table_ids
-  table_ids <- tables[!grepl("_dict", tables)]
-  table_ids <- table_ids[!grepl("_metadata", table_ids)]
+  table_ids <- tables[grepl("_dict", tables)]
 
   # check if table exists and remove connection and throw error if it does not
   if(!table_id %in% table_ids){
     RMariaDB::dbDisconnect(con); rm(con) # disconnect and remove connection
-    stop(paste0("table '",  table_id,"' does not exist in database '", database, "'", " -- please use SQL_table_ids('", database, "') or SQL_tables('", database, "') to list available tables"))
+    stop(paste0("table '",  table_id,"' does not exist in database '", database, "'", " -- please use SQL_tables('", database, "') or SQL_table_id_list('", database, "') to list available tables"))
   } else {
     cat("\n  Table ID: ", table_id, "\n\n")
   }
 
   # Check if dictionary exist and if so print it
   cat("\n")
-  if ( paste0(table_id, "_dict") %in% tables ) {
-    dict <- RMariaDB::dbGetQuery(con, paste0("SELECT * FROM ", table_id, "_dict;"))
-    print(dict)
+  if ( table_id %in% tables ) {
+    dict <- RMariaDB::dbGetQuery(con, paste0("SELECT * FROM ", table_id, ";"))
+    # print(dict)
   } else {
     print(paste0("dictionary for ", table_id, " does not exist."))
   }
