@@ -15,14 +15,14 @@
 #' @param test logical to test function by checking if original data.frame is identical to data loaded
 #'             into SQL server -- default is FALSE
 
-# TODO: add creditionals requirement and remove dba1 credentials from function
+# TODO: add credentials requirement and remove dba1 credentials from function
 # TODO: add check for database exists
 # TODO: check for table exists what if check > 1 ?
 ####################################################################################################
 
 
 
-SQL_write_bulk <- function(table = NULL, dict = NULL, table_id = NULL, database = "DDK", overwrite = FALSE, test = FALSE){
+SQL_write_bulk <- function(table = NULL, dict = NULL, table_id = NULL, database = "DDK", user = NULL, password = NULL, overwrite = FALSE, test = FALSE){
 
   # Check if HOME vector exists
   if (!exists("HOME")) stop("HOME vector does not exist in global environment. Please set HOME to Git root directory.")
@@ -32,6 +32,12 @@ SQL_write_bulk <- function(table = NULL, dict = NULL, table_id = NULL, database 
 
   # check if table_id exists
   if(is.null(table_id)){stop("table_id required")}
+
+  # check if user name exists
+  if(is.null(user)){stop("user required")}
+
+  # check if password exists
+  if(is.null(password)){stop("password required")}
 
   # check if dictionary exists
   if(is.null(dict)){stop("dictionary required")}
