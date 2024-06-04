@@ -38,7 +38,10 @@ SQL_write <- function(table = NULL, table_id = NULL, database = NULL, user = NUL
   RMariaDB::dbDisconnect(con);rm(con)
 
   # return time to write
-  end <- Sys.time()
-  return(paste0("Time to write table: ", end-start))
+  total_seconds <- as.numeric(difftime(Sys.time(), start, units = "secs"))
+  minutes <- floor(total_seconds/60)
+  seconds <- round(total_seconds%%60, 2)
+  return(cat(sprintf("Time to write table to SQL: %d minutes and %.2f seconds\n", minutes, seconds)))
+
 
 }
