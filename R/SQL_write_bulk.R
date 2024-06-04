@@ -37,7 +37,7 @@ SQL_write_bulk <- function(table = NULL, dict = NULL, table_id = NULL, database 
   if(is.null(dict)){stop("dictionary required")}
 
   # create tmp directory if does not exist
-  if (!dir.exists(paste0(HOME, "data/tmp"))){dir.create(paste0(HOME, "data/tmp"))}
+  if (!dir.exists(paste0(HOME, "/data/tmp"))){dir.create(paste0(HOME, "/data/tmp"), recursive=T)}
 
   ##############################################################################
 
@@ -47,7 +47,7 @@ SQL_write_bulk <- function(table = NULL, dict = NULL, table_id = NULL, database 
   table[table==-Inf] <- NA # can we silence this warning?
 
   # write temporary data file
-  tmp_path <- paste0(HOME, "data/tmp/", table_id, "_tmp.csv")
+  tmp_path <- paste0(HOME, "/data/tmp/", table_id, "_tmp.csv")
   data.table::fwrite(table, tmp_path, na = "\\N", row.names = F, col.names = F)
 
   ##############################################################################
@@ -66,9 +66,13 @@ SQL_write_bulk <- function(table = NULL, dict = NULL, table_id = NULL, database 
 
   # fix column names for create table query
   cols <- ""
-  for(i in 1:nrow(dict)){
-    if(i == nrow(dict)){cols <- paste0(cols, dict$column[i], " ", dict$typeSQL[i])}
-    else {cols <- paste0(cols, dict$column[i], " ", dict$typeSQL[i], ", ")}
+  for (i in 1:nrow(dict)) {
+    if(i == nrow(dict)) {
+      cols <- paste0(cols, dict$column[i], " ", dict$typeSQL[i])
+    }
+    else {
+      cols <- paste0(cols, dict$column[i], " ", dict$typeSQL[i], ", ")
+    }
   }
 
   # create table
