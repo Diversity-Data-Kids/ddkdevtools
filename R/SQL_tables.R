@@ -73,7 +73,7 @@ SQL_tables <- function(database = "DDK"){
   rm(tbl)
 
   # Stack
-  dt <- data.table::rbindlist(tbl_list); rm(tbl_list)
+  dt <- data.table::rbindlist(tbl_list, fill=T); rm(tbl_list)
 
   # disconnect from server
   RMariaDB::dbDisconnect(con); rm(con)
