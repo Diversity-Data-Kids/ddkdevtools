@@ -9,7 +9,8 @@ SQL_write(
   table_id = NULL,
   database = NULL,
   user = NULL,
-  password = NULL
+  password = NULL,
+  overwrite = F
 )
 }
 \arguments{
@@ -22,6 +23,8 @@ SQL_write(
 \item{user}{username for SQL database, this function will only work with administrator credintials}
 
 \item{password}{password for SQL database administrator}
+
+\item{overwrite}{logical to overwrite table if it exists -- default is FALSE}
 }
 \description{
 write table from R environment into SQL database

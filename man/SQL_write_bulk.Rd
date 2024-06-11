@@ -9,6 +9,8 @@ SQL_write_bulk(
   dict = NULL,
   table_id = NULL,
   database = "DDK",
+  user = NULL,
+  password = NULL,
   overwrite = FALSE,
   test = FALSE
 )
