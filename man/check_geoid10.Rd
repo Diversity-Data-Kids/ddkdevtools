@@ -2,17 +2,16 @@
 % Please edit documentation in R/check_geoid.R
 \name{check_geoid10}
 \alias{check_geoid10}
-\alias{check_geoid}
 \title{check_geoid10}
 \usage{
-check_geoid(dt = NULL)
+check_geoid10(dt = NULL)
 }
 \arguments{
 \item{dt}{Data table to be tested. Must contain a column named geoid containing
 11-character census tract FIPS codes.}
 }
 \description{
-Checks if dt contains only census tracts as defined for the 2010 census. 
+Checks if dt contains only census tracts as defined for the 2010 census.
 Between 2010 and 2019, there were some changes in census tract FIPS codes.
 This function loads the 2010 census tract FIPS codes From DDK.TRACTS and checks
 if dt contains any census tract FIPS codes that did not exist in 2010.
