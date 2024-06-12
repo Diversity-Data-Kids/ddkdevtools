@@ -9,12 +9,14 @@ check_geoid(dt = NULL, year = NULL)
 \arguments{
 \item{dt}{Data table to be tested. Must contain a column named geoid containing
 11-character census tract FIPS codes.}
+
+\item{year}{Integer with 4-digit calendar year for reference table, usually 2010 or 2020.}
 }
 \description{
-Checks if dt contains only census tracts as defined for the 2010 (or 2020) census.
+Checks if dt contains only census tracts as defined for the 2010 (or 2020) census in the 50+1 US states.
 
 This function loads the 2010 (2020) census tract FIPS codes From DDK.TRACTS and checks
-if dt contains any census tract FIPS codes that did not exist in 2010 (2020).
+if dt contains any census tract FIPS codes that did not exist in 2010 (2020) in the 50+1 US states.
 The function returns a data table with the following columns: geoid, data1, data2
 data1 indicates if an observation was included in the test data table dt
 data2 indicates if an observation was included in the reference data table.
