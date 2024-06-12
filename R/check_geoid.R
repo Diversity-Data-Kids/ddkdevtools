@@ -17,8 +17,13 @@
 #'
 #' @param dt Data table to be tested. Must contain a column named geoid containing
 #' 11-character census tract FIPS codes.
+#' @param year Integer with 4-digit calendar year for reference table, usually 2010 or 2020.
 
 check_geoid <- function(dt=NULL, year=NULL) {
+
+  # Checks
+  if(is.null(dt))   stop("dt is required")
+  if(is.null(year)) stop("year is required")
 
   # Load reference table, only returns single column (geoid) with 2010 data
   ref <- SQL_load("DDK", "TRACTS", columns="geoid", filter=paste0("year=", year), overwrite=T, noisily=F)
@@ -30,7 +35,7 @@ check_geoid <- function(dt=NULL, year=NULL) {
   dt <- dt[, .(geoid, data1, data2)]
 
   # Print test results
-  if (nrow(dt[is.na(data2)])>0) warning(paste0("dt has non-", year," census tract FIPS codes. Use is.na(data2) to filter those from the return data table."))
+  if (nrow(dt[is.na(data2)])>0) warning(paste0("dt has non-", year," census tract FIPS codes. Use chk[, .N, by=.(data1, data2)] to tabulate and is.na(data2) to filter those from the return data table."))
   else print(paste0("dt has only ", year, " census tract FIPS codes."))
 
   return(dt)
