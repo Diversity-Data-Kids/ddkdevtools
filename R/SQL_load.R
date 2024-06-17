@@ -1,3 +1,4 @@
+###############################################################################################
 #' @name  SQL_load
 #' @title Load table from SQL database
 #' @author brian devoe
@@ -30,7 +31,7 @@
 #'                     will load table from Rdata file. If TRUE, function will download table from SQL database and
 #'                     overwrite the existing Rdata file.
 
-# TODO: add example function call to documentation
+###############################################################################################
 
 # function: load_db
 SQL_load <- function(database  = "DDK",
@@ -39,7 +40,7 @@ SQL_load <- function(database  = "DDK",
                      filter     = NULL,
                      noisily    = TRUE,
                      show_metadata_only = FALSE,
-                     overwrite  = FALSE) {
+                     overwrite  = TRUE) {
 
   ### Initial checks
 
