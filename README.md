@@ -29,6 +29,15 @@ METRICS_10 <- SQL_load(table    = "METRICS_10",
                        filter   = c("year = 2010"))
 ```
 
+Load only a subset of columns and filter by variable and string match (this will subset geoid to only those that start with "01")
+
+```{r}
+METRICS_10 <- SQL_load(table    = "METRICS_10",
+                       database = "DDK",
+                       columns  = c("geoid", "year", "coi30_met"),
+                       filter   = c("geoid LIKE '01%'", "year = 2010"))
+```
+
 ### To install and update
 
 To install devtools
