@@ -81,6 +81,9 @@ SQL_write_bulk <- function(table = NULL, dict = NULL, table_id = NULL, database 
     }
   }
 
+  # Enable loading local data
+  RMariaDB::dbExecute(con, "SET GLOBAL local_infile=1;")
+
   # create table
   create_table <- paste0("CREATE TABLE ", table_id, " (", cols, ");")
   RMariaDB::dbExecute(con, create_table)
