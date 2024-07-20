@@ -28,8 +28,8 @@
 #' @param show_metadata_only   Default is FALSE. If TRUE, function call only prints out dictionary and metadata.
 #'
 #' @param overwrite    Default is FALSE. If FALSE and table exists in /data/source_data/sql/ folder, function
-#'                     will load table from Rdata file. If TRUE, function will download table from SQL database and
-#'                     overwrite the existing Rdata file.
+#'                     will load table from csv file using a dictionary (i.e., with correct types). If TRUE, function will download table from SQL database and
+#'                     overwrite the existing csv file.
 
 ###############################################################################################
 

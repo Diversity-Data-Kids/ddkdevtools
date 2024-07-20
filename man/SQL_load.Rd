@@ -11,7 +11,7 @@ SQL_load(
   filter = NULL,
   noisily = TRUE,
   show_metadata_only = FALSE,
-  overwrite = FALSE
+  overwrite = TRUE
 )
 }
 \arguments{
@@ -31,8 +31,8 @@ filter = c("col1 = 'value1', col2 = 'value2', col3 >= 'value3', ...)}
 \item{show_metadata_only}{Default is FALSE. If TRUE, function call only prints out dictionary and metadata.}
 
 \item{overwrite}{Default is FALSE. If FALSE and table exists in /data/source_data/sql/ folder, function
-will load table from Rdata file. If TRUE, function will download table from SQL database and
-overwrite the existing Rdata file.}
+will load table from csv file using a dictionary (i.e., with correct types). If TRUE, function will download table from SQL database and
+overwrite the existing csv file.}
 }
 \description{
 Wrapper function for SQL SELECT queries from the SQL database.
