@@ -67,8 +67,9 @@ SQL_load <- function(database  = "DDK",
   SAVE_TO <- paste0(HOME, "/data/source_data/sql/", database)
   if (dir.exists(SAVE_TO)==F) dir.create(SAVE_TO, recursive = T)
 
-  # file
-  file_name <- paste0(SAVE_TO, "/", table_id, ".Rdata")
+  # file and dictionary
+  file_name <- paste0(SAVE_TO, "/", table_id, ".csv")
+  dict_name <- paste0(SAVE_TO, "/", table_id, "_dict.csv")
 
   ##############################################################################
 
@@ -80,12 +81,22 @@ SQL_load <- function(database  = "DDK",
   if ( file.exists(file_name)==T & overwrite==F & show_metadata_only==F) {
 
     print(paste("Loading table from disk:", file_name))
-    load(file_name)
 
-    # End timer
+    if (file.exists(dict_name)==F) stop(paste0("Dictionary does not exist: ", dict_name, ". Manually delete the table (", file_name, ") and try again."))
+
+    # Load dictionary
+    dict <- fread(dict_name, colClasses = "character")
+
+    # Load data
+    dt <- dict$data_type; names(dt) <- dict$column_name
+    dt <- fread(file_name, select=dt)
+
+    # End timer and return data.table
     total_seconds <- as.numeric(difftime(Sys.time(), start, units = "secs"))
     minutes <- floor(total_seconds / 60); seconds <- round(total_seconds %% 60, 2)
     cat(sprintf("Time to load table from disk: %d minutes and %.2f seconds\n", minutes, seconds))
+
+    return(dt)
 
   } else {
 
@@ -179,8 +190,16 @@ SQL_load <- function(database  = "DDK",
 
   # return
   if (show_metadata_only==F) {
+
+    # save to disk
     dt <- data.table::as.data.table(dt)
-    save(dt, file = file_name)
+    data.table::fwrite(dt, file_name)
+
+    # Create dictionary for dt, save to disk
+    dict <- data.table::data.table(column_name = names(dt), data_type = sapply(dt, class))
+    data.table::fwrite(dict, dict_name)
+
+    # Return data table
     return(dt)
   } else {
     print("No table loaded (show_metadata_only==T).")
