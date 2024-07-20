@@ -56,6 +56,12 @@ SQL_write_bulk <- function(table = NULL, dict = NULL, table_id = NULL, database 
   tmp_path <- paste0(HOME, "/data/tmp/", table_id, "_tmp.csv")
   data.table::fwrite(table, tmp_path, na = "\\N", row.names = F, col.names = F)
 
+  # Delete table from memory unless needed for testing
+  if (test == TRUE) {
+    rm(table)
+    gc()
+  }
+
   ##############################################################################
 
   # connect to database
@@ -100,7 +106,7 @@ SQL_write_bulk <- function(table = NULL, dict = NULL, table_id = NULL, database 
   cat(sprintf("Time to write table to SQL: %d minutes and %.2f seconds\n", minutes, seconds))
 
   # test if data is identical to table inserted into SQL database
-  if(test == TRUE){
+  if (test == TRUE) {
     # read table from database
     table_sql <- data.table::as.data.table(RMariaDB::dbGetQuery(con, paste0("SELECT * FROM ", table_id, ";")))
     # compare
