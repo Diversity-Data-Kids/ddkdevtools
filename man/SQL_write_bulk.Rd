@@ -5,24 +5,28 @@
 \title{SQL_write_bulk}
 \usage{
 SQL_write_bulk(
+  database = "DDK",
+  table_id = NULL,
   table = NULL,
   dict = NULL,
-  table_id = NULL,
-  database = "DDK",
-  user = NULL,
-  password = NULL,
+  user = Sys.getenv("SQL_dba1"),
+  password = Sys.getenv("SQL_dba1_pass"),
   overwrite = FALSE,
   test = FALSE
 )
 }
 \arguments{
+\item{database}{name of database to write to in SQL database -- default is 'DDK'}
+
+\item{table_id}{name of table that will appear in SQL database}
+
 \item{table}{data.table within R environment to write to SQL database}
 
 \item{dict}{dictionary of table}
 
-\item{table_id}{name of table that will appear in SQL database}
+\item{user}{username for SQL database, this function will only work with administrator credintials}
 
-\item{database}{name of database to write to in SQL database -- default is 'DDK'}
+\item{password}{password for SQL database administrator}
 
 \item{overwrite}{logical to overwrite table if it exists -- default is FALSE}
 

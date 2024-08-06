@@ -4,6 +4,9 @@
 #'
 #' @description
 #' kills processes from a database
+#'
+#' @param user username for SQL database, this function will only work with administrator credintials
+#' @param password password for SQL database administrator
 
 
 # SQL_kill_connection <- function(user = NULL, password = NULL){

@@ -4,7 +4,15 @@
 \alias{SQL_kill_connection}
 \title{SQL_kill_connection}
 \usage{
-SQL_kill_connection(user = NULL, password = NULL)
+SQL_kill_connection(
+  user = Sys.getenv("SQL_dba1"),
+  password = Sys.getenv("SQL_dba1_pass")
+)
+}
+\arguments{
+\item{user}{username for SQL database, this function will only work with administrator credintials}
+
+\item{password}{password for SQL database administrator}
 }
 \description{
 kills processes from a database

@@ -5,20 +5,20 @@
 \title{SQL_write}
 \usage{
 SQL_write(
-  table = NULL,
-  table_id = NULL,
   database = NULL,
-  user = NULL,
-  password = NULL,
+  table_id = NULL,
+  table = NULL,
+  user = Sys.getenv("SQL_dba1"),
+  password = Sys.getenv("SQL_dba1_pass"),
   overwrite = F
 )
 }
 \arguments{
-\item{table}{data table in R environment to write to SQL database}
+\item{database}{name of database to write to in SQL database}
 
 \item{table_id}{name the table that will appear in SQL database}
 
-\item{database}{name of database to write to in SQL database}
+\item{table}{data table in R environment to write to SQL database}
 
 \item{user}{username for SQL database, this function will only work with administrator credintials}
 

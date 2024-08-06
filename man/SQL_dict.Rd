@@ -4,13 +4,13 @@
 \alias{SQL_dict}
 \title{Load table dictionary only}
 \usage{
-SQL_dict(table_id = NULL, database = "DDK")
+SQL_dict(database = "DDK", table_id = NULL)
 }
 \arguments{
+\item{database}{Name of database to connect to, character vector of length 1. Default is "DDK".}
+
 \item{table_id}{Name of table from SQL database to load into R environment.
 See SQL_table function for list of tables.}
-
-\item{database}{Name of database to connect to, character vector of length 1. Default is "DDK".}
 }
 \description{
 Wrapper function that loads the table dictionary only

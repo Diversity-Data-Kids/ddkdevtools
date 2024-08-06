@@ -6,13 +6,13 @@
 #' write table from R environment into SQL database
 #' WARNING: This function will not work unless you have database administrator credentials
 #'
-#' @param table data table in R environment to write to SQL database
-#' @param table_id name the table that will appear in SQL database
 #' @param database name of database to write to in SQL database
-#' @param overwrite logical to overwrite table if it exists -- default is FALSE
-#'
+#' @param table_id name the table that will appear in SQL database
+#' @param table data table in R environment to write to SQL database
 #' @param user username for SQL database, this function will only work with administrator credintials
 #' @param password password for SQL database administrator
+#' @param overwrite logical to overwrite table if it exists -- default is FALSE
+
 
 # SQL_write <- function(database = NULL, table_id = NULL, table = NULL, user = NULL, password = NULL, overwrite=F){
 SQL_write <- function(database = NULL,table_id = NULL,table = NULL,user = Sys.getenv("SQL_dba1"),password = Sys.getenv("SQL_dba1_pass"),overwrite=F){

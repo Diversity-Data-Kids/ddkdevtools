@@ -7,10 +7,12 @@
 #' write table from given directory to COI SQL database using bulk/batch method
 #' WARNING: will throw and error if local infile is not enabled as root user use 'SET GLOBAL local_infile = 1;' to enable
 #'
+#' @param database name of database to write to in SQL database -- default is 'DDK'
+#' @param table_id name of table that will appear in SQL database
 #' @param table data.table within R environment to write to SQL database
 #' @param dict  dictionary of table
-#' @param table_id name of table that will appear in SQL database
-#' @param database name of database to write to in SQL database -- default is 'DDK'
+#' @param user username for SQL database, this function will only work with administrator credintials
+#' @param password password for SQL database administrator
 #' @param overwrite logical to overwrite table if it exists -- default is FALSE
 #' @param test logical to test function by checking if original data.frame is identical to data loaded
 #'             into SQL server -- default is FALSE
