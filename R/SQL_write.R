@@ -14,7 +14,7 @@
 #' @param user username for SQL database, this function will only work with administrator credintials
 #' @param password password for SQL database administrator
 
-SQL_write <- function(table = NULL, table_id = NULL, database = NULL, user = NULL, password = NULL, overwrite=F){
+SQL_write <- function(database = NULL, table_id = NULL, table = NULL, user = NULL, password = NULL, overwrite=F){
 
   # start time
   start <- Sys.time()

@@ -10,7 +10,7 @@
 #'
 #' @param database Name of database to connect to, character vector of length 1. Default is "DDK".
 
-SQL_dict <- function(table_id = NULL, database   = "DDK") {
+SQL_dict <- function(database = "DDK", table_id = NULL) {
 
   # check if table and database is provided
   if(is.null(table_id)){stop("table_id parameter is required")}

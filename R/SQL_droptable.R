@@ -11,7 +11,7 @@
 #' @param user username for SQL database, this function will only work with administrator credintials
 #' @param password password for SQL database administrator
 
-SQL_droptable <- function(table_id = NULL, database = NULL, user = NULL, password = NULL){
+SQL_droptable <- function(database = NULL, table_id = NULL, user = NULL, password = NULL){
 
   # connect to SQL server
   con <- RMariaDB::dbConnect(RMariaDB::MariaDB(),host='129.64.58.140',port=3306,user=user,password=password)
