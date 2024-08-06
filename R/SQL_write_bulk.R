@@ -22,7 +22,9 @@
 
 
 
-SQL_write_bulk <- function(database = "DDK", table_id = NULL, table = NULL, dict = NULL, user = NULL, password = NULL, overwrite = FALSE, test = FALSE){
+# SQL_write_bulk <- function(database = "DDK", table_id = NULL, table = NULL, dict = NULL, user = NULL, password = NULL, overwrite = FALSE, test = FALSE){
+SQL_write_bulk <- function(database = "DDK", table_id = NULL, table = NULL, dict = NULL, user = Sys.getenv("SQL_dba1"), password = Sys.getenv("SQL_dba1_pass"), overwrite = FALSE, test = FALSE){
+
 
   # Check if HOME vector exists
   if (!exists("HOME")) stop("HOME vector does not exist in global environment. Please set HOME to Git root directory.")

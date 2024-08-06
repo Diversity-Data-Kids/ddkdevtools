@@ -6,7 +6,8 @@
 #' kills processes from a database
 
 
-SQL_kill_connection <- function(user = NULL, password = NULL){
+# SQL_kill_connection <- function(user = NULL, password = NULL){
+SQL_kill_connection <- function(user = Sys.getenv("SQL_dba1"), password = Sys.getenv("SQL_dba1_pass")){
 
   # connect to SQL server
   con <- RMariaDB::dbConnect(RMariaDB::MariaDB(),host='129.64.58.140',port=3306,user=user,password=password)
